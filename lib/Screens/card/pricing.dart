@@ -18,13 +18,28 @@ class _PricingState extends State<Pricing> {
   void initState() {
     setState(() {
       authcontroller.selectedPlan.value = "card";
-      dashController.selectedPlanAmount.value =
-          dashController.allPlans[2]["offerPrice"].toString();
-      dashController.selectedPlanType.value =
-          dashController.allPlans[2]["planType"];
+      for (int i = 0; i < dashController.allPlans.length; i++) {
+        if (dashController.allPlans[i]["planType"] == "Card") {
+          setState(() {
+            authcontroller.selectedPlanIndex.value = i;
+            dashController.selectedPlanAmount.value =
+                dashController.allPlans[i]["offerPrice"].toString();
+            dashController.selectedPlanType.value =
+                dashController.allPlans[i]["planType"];
 
-      dashController.selectedPlanId.value =
-          dashController.allPlans[2]["planTypeId"].toString();
+            dashController.selectedPlanId.value =
+                dashController.allPlans[i]["planTypeId"].toString();
+          });
+          print("object");
+        }
+      }
+      // dashController.selectedPlanAmount.value =
+      //     dashController.allPlans[2]["offerPrice"].toString();
+      // dashController.selectedPlanType.value =
+      //     dashController.allPlans[2]["planType"];
+
+      // dashController.selectedPlanId.value =
+      //     dashController.allPlans[2]["planTypeId"].toString();
     });
     // TODO: implement initState
     super.initState();
@@ -94,17 +109,39 @@ class _PricingState extends State<Pricing> {
                             onTap: () {
                               setState(() {
                                 authcontroller.selectedPlan.value = "card";
-                                dashController.selectedPlanAmount.value =
-                                    dashController.allPlans[2]["offerPrice"]
-                                        .toString();
-                                dashController.selectedPlanType.value =
-                                    dashController.allPlans[2]["planType"];
+                                // dashController.selectedPlanAmount.value =
+                                //     dashController.allPlans[2]["offerPrice"]
+                                //         .toString();
+                                // dashController.selectedPlanType.value =
+                                //     dashController.allPlans[2]["planType"];
 
-                                dashController.selectedPlanId.value =
-                                    dashController.allPlans[2]["planTypeId"]
-                                        .toString();
-//                                   selectedPlan = "".obs;
-// selectedPlanId = "".obs;
+                                // dashController.selectedPlanId.value =
+                                //     dashController.allPlans[2]["planTypeId"]
+                                //         .toString();
+                                for (int i = 0;
+                                    i < dashController.allPlans.length;
+                                    i++) {
+                                  if (dashController.allPlans[i]["planType"] ==
+                                      "Card") {
+                                    setState(() {
+                                      authcontroller.selectedPlanIndex.value =
+                                          i;
+                                      dashController.selectedPlanAmount.value =
+                                          dashController.allPlans[i]
+                                                  ["offerPrice"]
+                                              .toString();
+                                      dashController.selectedPlanType.value =
+                                          dashController.allPlans[i]
+                                              ["planType"];
+
+                                      dashController.selectedPlanId.value =
+                                          dashController.allPlans[i]
+                                                  ["planTypeId"]
+                                              .toString();
+                                    });
+                                    print("object");
+                                  }
+                                }
                               });
                               print("object");
                             },
@@ -225,14 +262,38 @@ class _PricingState extends State<Pricing> {
                             onTap: () {
                               setState(() {
                                 authcontroller.selectedPlan.value = "mobile";
-                                dashController.selectedPlanAmount.value =
-                                    dashController.allPlans[0]["offerPrice"]
-                                        .toString();
-                                dashController.selectedPlanType.value =
-                                    dashController.allPlans[0]["planType"];
-                                dashController.selectedPlanId.value =
-                                    dashController.allPlans[0]["planTypeId"]
-                                        .toString();
+                                for (int i = 0;
+                                    i < dashController.allPlans.length;
+                                    i++) {
+                                  if (dashController.allPlans[i]["planType"] ==
+                                      "Web") {
+                                    setState(() {
+                                      authcontroller.selectedPlanIndex.value =
+                                          i;
+                                      dashController.selectedPlanAmount.value =
+                                          dashController.allPlans[i]
+                                                  ["offerPrice"]
+                                              .toString();
+                                      dashController.selectedPlanType.value =
+                                          dashController.allPlans[i]
+                                              ["planType"];
+
+                                      dashController.selectedPlanId.value =
+                                          dashController.allPlans[i]
+                                                  ["planTypeId"]
+                                              .toString();
+                                    });
+                                    print("object");
+                                  }
+                                }
+                                // dashController.selectedPlanAmount.value =
+                                //     dashController.allPlans[0]["offerPrice"]
+                                //         .toString();
+                                // dashController.selectedPlanType.value =
+                                //     dashController.allPlans[0]["planType"];
+                                // dashController.selectedPlanId.value =
+                                //     dashController.allPlans[0]["planTypeId"]
+                                //         .toString();
                               });
                               print("object");
                             },
@@ -369,14 +430,38 @@ class _PricingState extends State<Pricing> {
                               setState(() {
                                 authcontroller.selectedPlan.value =
                                     "cardandmobile";
-                                dashController.selectedPlanAmount.value =
-                                    dashController.allPlans[1]["offerPrice"]
-                                        .toString();
-                                dashController.selectedPlanType.value =
-                                    dashController.allPlans[1]["planType"];
-                                dashController.selectedPlanId.value =
-                                    dashController.allPlans[1]["planTypeId"]
-                                        .toString();
+                                for (int i = 0;
+                                    i < dashController.allPlans.length;
+                                    i++) {
+                                  if (dashController.allPlans[i]["planType"] ==
+                                      "Card and Web") {
+                                    setState(() {
+                                      authcontroller.selectedPlanIndex.value =
+                                          i;
+                                      dashController.selectedPlanAmount.value =
+                                          dashController.allPlans[i]
+                                                  ["offerPrice"]
+                                              .toString();
+                                      dashController.selectedPlanType.value =
+                                          dashController.allPlans[i]
+                                              ["planType"];
+
+                                      dashController.selectedPlanId.value =
+                                          dashController.allPlans[i]
+                                                  ["planTypeId"]
+                                              .toString();
+                                    });
+                                    print("object");
+                                  }
+                                }
+                                // dashController.selectedPlanAmount.value =
+                                //     dashController.allPlans[1]["offerPrice"]
+                                //         .toString();
+                                // dashController.selectedPlanType.value =
+                                //     dashController.allPlans[1]["planType"];
+                                // dashController.selectedPlanId.value =
+                                //     dashController.allPlans[1]["planTypeId"]
+                                //         .toString();
                               });
                               print("object");
                             },
@@ -813,12 +898,16 @@ class _PricingState extends State<Pricing> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                              dashController.allPlans[2]
-                                                          ["actualPrice"]
+                                              dashController
+                                                      .allPlans[authcontroller
+                                                          .selectedPlanIndex
+                                                          .value]["actualPrice"]
                                                       .toString() +
                                                   "/" +
-                                                  dashController.allPlans[2]
-                                                      ["validity"],
+                                                  dashController.allPlans[
+                                                      authcontroller
+                                                          .selectedPlanIndex
+                                                          .value]["validity"],
                                               //"₹499/lifetime",
                                               textAlign: TextAlign.left,
                                               style: GoogleFonts.poppins(
@@ -835,12 +924,16 @@ class _PricingState extends State<Pricing> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                              dashController.allPlans[2]
-                                                          ["offerPrice"]
+                                              dashController
+                                                      .allPlans[authcontroller
+                                                          .selectedPlanIndex
+                                                          .value]["offerPrice"]
                                                       .toString() +
                                                   "/" +
-                                                  dashController.allPlans[2]
-                                                      ["validity"],
+                                                  dashController.allPlans[
+                                                      authcontroller
+                                                          .selectedPlanIndex
+                                                          .value]["validity"],
                                               //"₹474/lifetime",
                                               style: GoogleFonts.dmSerifDisplay(
                                                 fontSize: kTwentyFont,
@@ -885,7 +978,7 @@ class _PricingState extends State<Pricing> {
                                                 ),
                                                 SizedBox(width: 8.w),
                                                 Text(
-                                                    "${dashController.allPlans[2]["discountPercentage"]}% off on card",
+                                                    "${dashController.allPlans[authcontroller.selectedPlanIndex.value]["discountPercentage"]}% off on card",
                                                     style: GoogleFonts
                                                         .dmSerifDisplay(
                                                       fontSize: kFourteenFont,
@@ -1156,11 +1249,17 @@ class _PricingState extends State<Pricing> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               Text(
-                                                  dashController.allPlans[0]
+                                                  dashController.allPlans[
+                                                              authcontroller
+                                                                  .selectedPlanIndex
+                                                                  .value]
                                                               ["actualPrice"]
                                                           .toString() +
                                                       "/" +
-                                                      dashController.allPlans[0]
+                                                      dashController.allPlans[
+                                                              authcontroller
+                                                                  .selectedPlanIndex
+                                                                  .value]
                                                           ["validity"],
 
                                                   //"₹569/lifetime",
@@ -1179,11 +1278,17 @@ class _PricingState extends State<Pricing> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               Text(
-                                                  dashController.allPlans[0]
+                                                  dashController.allPlans[
+                                                              authcontroller
+                                                                  .selectedPlanIndex
+                                                                  .value]
                                                               ["offerPrice"]
                                                           .toString() +
                                                       "/" +
-                                                      dashController.allPlans[0]
+                                                      dashController.allPlans[
+                                                              authcontroller
+                                                                  .selectedPlanIndex
+                                                                  .value]
                                                           ["validity"],
 
                                                   //"₹569/lifetime",
@@ -1232,7 +1337,7 @@ class _PricingState extends State<Pricing> {
                                                     ),
                                                     SizedBox(width: 8.w),
                                                     Text(
-                                                        "${dashController.allPlans[0]["discountPercentage"]}% off on card",
+                                                        "${dashController.allPlans[authcontroller.selectedPlanIndex.value]["discountPercentage"]}% off on card",
                                                         //"10% off on card",
                                                         style: GoogleFonts
                                                             .dmSerifDisplay(
@@ -1685,14 +1790,17 @@ class _PricingState extends State<Pricing> {
                                                     MainAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                      dashController
-                                                              .allPlans[1]
-                                                                  [
+                                                      dashController.allPlans[
+                                                                  authcontroller
+                                                                      .selectedPlanIndex
+                                                                      .value][
                                                                   "actualPrice"]
                                                               .toString() +
                                                           "/" +
-                                                          dashController
-                                                                  .allPlans[1]
+                                                          dashController.allPlans[
+                                                                  authcontroller
+                                                                      .selectedPlanIndex
+                                                                      .value]
                                                               ["validity"],
 
                                                       //"₹1199/lifetime",
@@ -1712,12 +1820,18 @@ class _PricingState extends State<Pricing> {
                                                     MainAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                      dashController.allPlans[1]
+                                                      dashController.allPlans[
+                                                                  authcontroller
+                                                                      .selectedPlanIndex
+                                                                      .value]
                                                                   ["offerPrice"]
                                                               .toString() +
                                                           "/" +
                                                           dashController
-                                                                  .allPlans[1]
+                                                                      .allPlans[
+                                                                  authcontroller
+                                                                      .selectedPlanIndex
+                                                                      .value]
                                                               ["validity"],
 
                                                       // "₹1079/lifetime",
@@ -1768,7 +1882,7 @@ class _PricingState extends State<Pricing> {
                                                         ),
                                                         SizedBox(width: 8.w),
                                                         Text(
-                                                            "${dashController.allPlans[1]["discountPercentage"]}% off on card",
+                                                            "${dashController.allPlans[authcontroller.selectedPlanIndex.value]["discountPercentage"]}% off on card",
                                                             //"10% off on card",
                                                             style: GoogleFonts
                                                                 .dmSerifDisplay(
@@ -1802,7 +1916,21 @@ class _PricingState extends State<Pricing> {
                         fontWeight: kFW700,
                         isLoading: false,
                         onTap: () {
-                          Get.toNamed(kShippingAddress);
+                          if (authcontroller.selectedPlan == "mobile") {
+                            var payload = {
+                              'paymentAmount':
+                                  dashController.selectedPlanAmount.value,
+                              'planTypeId': dashController.selectedPlanId.value,
+                              'planType': dashController.selectedPlanType.value,
+                              'validity': "lifetime"
+                            };
+                            // var payloads = {};
+                            // dashController.useCreateOrders(payloads);
+                            // ('https://api.bharatastrosage.com/api/payments/savePayment/24?paymentAmount=34&planTypeId=34&planType=cdc&validity=3e'));
+                            dashController.savepaymentMobile(payload);
+                          } else {
+                            Get.toNamed(kShippingAddress);
+                          }
                         })
                   ],
                 ),

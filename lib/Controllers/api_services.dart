@@ -16,15 +16,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:geocoding/geocoding.dart';
 // import 'package:geolocator/geolocator.dart';
- 
+
 import 'package:intl/intl.dart';
 
 class ApiService extends GetxService {
 //  http://192.168.1.197:5000
 
 //   'http://192.168.1.29:9094/api/auth/login?email=raja123%40gmail.com&password=raja123' \
-  // String baseUrl = "https://api.bharatastrosage.com/api/";
-  String baseUrl = "http://192.168.1.19:9094/api/";
+  String baseUrl = "https://api.bharatastrosage.com/"; // main
+  // String baseUrl = "http://192.168.1.46:9094/";
+
+// http://192.168.1.28:9094/swagger-ui/index.html
   String dummybaseUrl = "https://thewisguystech.com/";
   // String dummybaseUrl = "https://twgpost.in/";
   String dummybaseUrl2 = "https://apis.thewisguystech.com/";
@@ -45,66 +47,8 @@ class ApiService extends GetxService {
   };
   ////////////TWG APIS SERVICES
   ///Live apis
-  Future<dynamic> livegetRequest({
-    required String endpoint,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(live_baseUrl + endpoint);
-    try {
-      // var header = {
-      //   "Authorization": '${UserSimplePreferences.getToken()}',
-      //   //  "accept": 'application/json'
-      // };
-      var response = await http.get(url);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   //PostRequestCoupons
-  Future postRequestSignUpCouponsFormData({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['coupon_code'] = payload['coupon_code'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 // Postrequest Ship Address
 // import 'package:http/http.dart' as http;
@@ -165,6 +109,10 @@ class ApiService extends GetxService {
       var response = await http.post(url, body: payload, headers: header);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 ||
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -181,68 +129,6 @@ class ApiService extends GetxService {
   }
 
 //
-  Future<dynamic> postRequestShipAdmmdressFormData({
-    required String endpoint,
-    required Map payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(
-        "https://api.bharatastrosage.com/api/shiprocket/createCardOrder/14/799/Card");
-    try {
-      var header = {
-        //  'accept': '*/*',
-        // 'Authorization': 'Bearer ${UserSimplePreferences.getToken()}',
-        // 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYW0xMjNAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTczODIzNTIxOCwiZXhwIjoxNzM4MjM4ODE4fQ.mTP152Ija7lusa_I7paRepgt7mMzZFbpAV92kjmKBfA',
-        // 'Content-Type': 'application/json',
-        "Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
-        "accept": 'application/json'
-      };
-      var response = await http.post(url, body: payload, headers: header);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-    // Uri url = Uri.parse(baseUrl + endpoint);
-
-    // try {
-    //   var headers = {
-    //     "Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
-    //     "Content-Type": "multipart/form-data",
-    //     ...?customHeaders, // Merge custom headers
-    //   };
-
-    //   var request = http.MultipartRequest('POST', url);
-    //   request.headers.addAll(headers);
-
-    //   // Adding fields from payload
-    //   payload.forEach((key, value) {
-    //     request.fields[key] = value;
-    //   });
-
-    //   var streamedResponse = await request.send();
-    //   var response = await http.Response.fromStream(streamedResponse);
-
-    //   if (response.statusCode == 200 || response.statusCode == 201) {
-    //     return response.body;
-    //   } else {
-    //     return jsonDecode(response.body);
-    //   }
-    // } catch (e) {
-    //   debugPrint("Error: $e");
-    //   return {"message": "Something went wrong!"};
-    // }
-  }
 
   // Future postRequestShipAddressFormData({
   //   required String endpoint,
@@ -278,10 +164,8 @@ class ApiService extends GetxService {
   //     }
   //   }
   // }
-
-//
-  /////
-  Future postRequestSignInFormData({
+  //Sign Up
+  Future postRequestSignUpFormData({
     required String endpoint,
     required Map<dynamic, dynamic> payload,
     Map<String, String>? customHeaders,
@@ -293,9 +177,438 @@ class ApiService extends GetxService {
       //   "Authorization": '${UserSimplePreferences.getToken()}',
       //   //  "accept": 'application/json'
       // };
+//       :ram
+// :ram123@gmail.com
+// :Ram@12345
+// :Ram@12345
+// "auth/save?userName=${}&email=${}&password=${}&confirmPassword=${}"
+      var request = http.MultipartRequest('POST', url)
+        ..fields['userName'] = payload['name']
+        ..fields['email'] = payload['email']
+        ..fields['password'] = payload['password']
+        ..fields['confirmPassword'] = payload['cpassword'];
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      }
+    } on DioError catch (e) {
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
+    }
+  }
+
+  // Login v2
+  Future postRequestSignInV2FormData({
+    required String endpoint,
+    required Map<dynamic, dynamic> payload,
+    Map<String, String>? customHeaders,
+  }) async {
+    Uri url = Uri.parse(baseUrl + endpoint);
+
+    try {
+      // var header = {
+      //   "Authorization": '${UserSimplePreferences.getToken()}',
+      //   //  "accept": 'application/json'
+      // };
+//       :ram
+// :ram123@gmail.com
+// :Ram@12345
+// :Ram@12345
+      var request = http.MultipartRequest('POST', url)
+        ..fields['email'] = payload['user_email']
+        // "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
+        ..fields['password'] = payload['user_password'];
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      }
+    } on DioError catch (e) {
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
+    }
+  }
+
+  // delship
+  Future postRequestDelSHipFormData({
+    required String endpoint,
+    required Map<dynamic, dynamic> payload,
+    Map<String, String>? customHeaders,
+  }) async {
+    var headers = {
+      'accept': '*/*',
+      // 'Authorization': 'Bearer ${UserSimplePreferences.getToken()}'
+    };
+
+    var request = http.Request('DELETE', Uri.parse(baseUrl + endpoint)
+        // Uri.parse(
+        //   'https://api.bharatastrosage.com/api/auth/deleteShipmentOrder?shiprocketOrderId=$shiprocketOrderId',
+        // ),
+        );
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return {"message": "Shipment deleted successfully"};
+    } else {
+      print(response.reasonPhrase);
+    }
+
+    // Uri url = Uri.parse(baseUrl + endpoint);
+
+    // try {
+    //   var header = {
+    //     "Content-Type": "multipart/form-data",
+    //     // "Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
+    //     "accept": '*/*',
+    //   };
+
+    //   var request = http.MultipartRequest('DELETE', url)
+
+    //     ..headers.addAll(header);
+
+    //   var streamedResponse = await request.send();
+    //   var response = await http.Response.fromStream(streamedResponse);
+
+    //   if (response.statusCode == 200 || response.statusCode == 201) {
+    //     return response.body;
+    //   }
+    // } on DioError catch (e) {
+    //   debugPrint("$e");
+    //   if (e.response?.statusCode == 404) {
+    //     return e.response?.data;
+    //   } else if (e.response?.statusCode == 401) {
+    //     return e.response?.data;
+    //   } else if (e.response?.statusCode == 400) {
+    //     return e.response?.data;
+    //   } else {
+    //     return {"message": "Something went wrong!"};
+    //   }
+    // }
+  }
+
+  Future postRequestSavepaymentFormData({
+    required String endpoint,
+    required Map<dynamic, dynamic> payload,
+    Map<String, String>? customHeaders,
+  }) async {
+    var headers = {
+      'accept': '*/*',
+      'Authorization': 'Bearer ${UserSimplePreferences.getToken()}'
+    };
+
+    var request = http.Request('POST', Uri.parse(baseUrl + endpoint)
+        // Uri.parse(
+        //   'https://api.bharatastrosage.com/api/auth/deleteShipmentOrder?shiprocketOrderId=$shiprocketOrderId',
+        // ),
+        );
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return;
+    } else {
+      print(response.reasonPhrase);
+    }
+
+    // mobile or web
+
+    ///
+
+    // Uri url = Uri.parse(baseUrl + endpoint);
+
+    // try {
+    //   var header = {
+    //     "Content-Type": "multipart/form-data",
+    //     // "Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
+    //     "accept": '*/*',
+    //   };
+
+    //   var request = http.MultipartRequest('DELETE', url)
+
+    //     ..headers.addAll(header);
+
+    //   var streamedResponse = await request.send();
+    //   var response = await http.Response.fromStream(streamedResponse);
+
+    //   if (response.statusCode == 200 || response.statusCode == 201) {
+    //     return response.body;
+    //   }
+    // } on DioError catch (e) {
+    //   debugPrint("$e");
+    //   if (e.response?.statusCode == 404) {
+    //     return e.response?.data;
+    //   } else if (e.response?.statusCode == 401) {
+    //     return e.response?.data;
+    //   } else if (e.response?.statusCode == 400) {
+    //     return e.response?.data;
+    //   } else {
+    //     return {"message": "Something went wrong!"};
+    //   }
+    // }
+  }
+
+  //
+  Future<dynamic> editAstroRequest({
+    required String endpoint,
+    required Map payload,
+    File? image, // Optional image file
+  }) async {
+    var headers = {
+      'accept': '*/*',
+      'Authorization': 'Bearer ${UserSimplePreferences.getToken()}',
+    };
+
+    Uri url = Uri.parse(baseUrl + endpoint);
+    var request = http.MultipartRequest('PUT', url);
+    request.headers.addAll(headers);
+
+    // Attach form data (excluding image)
+    payload.forEach((key, value) {
+      request.fields[key] = value.toString();
+    });
+
+    // Attach image file if provided
+    if (image != null && await image.exists()) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'uploadImage', // Make sure this matches API's expected field name
+        image.path,
+        contentType:
+            MediaType('image', 'png'), // Adjust based on your file type
+      ));
+    }
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    //   required String endpoint,
+    //   required Map payload,
+    //   File? image,
+    //   Map<String, String>? customHeaders,
+    // }) async {
+    //   var headers = {
+    //     'accept': '*/*',
+    //     'Content-Type': 'application/json',
+    //     'Authorization': 'Bearer ${UserSimplePreferences.getToken()}'
+    //   };
+
+    //   Uri url = Uri.parse(baseUrl + endpoint);
+
+    //   //  var request = http.Request('PUT', url);
+    //   var request = http.MultipartRequest('PUT', url);
+
+    //   request.headers.addAll(headers);
+    //   if (image != null && image.existsSync()) {
+    //     request.files.add(await http.MultipartFile.fromPath(
+    //       'uploadImage',
+    //       image.path,
+    //       contentType: MediaType('image', 'png'),
+    //     ));
+    //   }
+
+    //   http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.body; // Return parsed JSON response
+    } else if (response.statusCode == 401 &&
+        jsonDecode(response.body) == "Token is expired") {
+      Get.toNamed(kSignIns);
+      //return jsonDecode(response.body); // Return parsed JSON response
+    } else {
+      print("Error: ${response.reasonPhrase}");
+      return {"message": "Something went wrong!"};
+    }
+  }
+
+// v2 chnageAstrorequest
+  Future changeAstroRequestv2({
+    required String endpoint,
+    required Map<dynamic, dynamic> payload,
+    Map<String, String>? customHeaders,
+  }) async {
+    Uri url = Uri.parse(baseUrl + endpoint);
+
+    try {
+      // var header = {
+      //   "Authorization": '${UserSimplePreferences.getToken()}',
+      //   //  "accept": 'application/json'
+      // };
+      var headers = {
+        'accept': '*/*',
+        'Authorization': 'Bearer ${UserSimplePreferences.getToken()}',
+      };
+
+      var request = http.MultipartRequest('POST', url)
+        ..fields['oldPassword'] = payload["oldPassword"]
+        // "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
+        ..fields['password'] = payload["password"]
+        ..fields['confirmPassword'] = payload["confirmPassword"];
+      request.headers.addAll(headers);
+//  "api/auth/changePassword/${userDetails["userProfileId"]}?oldPassword=${}&password=${}&confirmPassword=${}");
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
+      }
+    } on DioError catch (e) {
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
+    }
+  }
+
+  //
+  Future savepaymobile({
+    required String endpoint,
+    required Map<dynamic, dynamic> payload,
+    Map<String, String>? customHeaders,
+  }) async {
+    Uri url = Uri.parse(baseUrl + endpoint);
+
+    try {
+      // var header = {
+      //   "Authorization": '${UserSimplePreferences.getToken()}',
+      //   //  "accept": 'application/json'
+      // };
+      var headers = {
+        'accept': '*/*',
+        'Authorization': 'Bearer ${UserSimplePreferences.getToken()}',
+      };
+//  "paymentAmount=${}&planTypeId=${}&planType=${}&validity=${payload["validity"]}",
+      var request = http.MultipartRequest('POST', url)
+        ..fields["paymentAmount"] = payload["paymentAmount"]
+        //
+        ..fields['planTypeId'] = payload["planTypeId"]
+        ..fields['planType'] = payload["planType"]
+        ..fields['validity'] = payload["validity"];
+      request.headers.addAll(headers);
+//  "api/auth/changePassword/${userDetails["userProfileId"]}?oldPassword=${}&password=${}&confirmPassword=${}");
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
+      }
+    } on DioError catch (e) {
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
+    }
+  }
+
+//
+  Future<dynamic> changeAstroRequest({
+    required String endpoint,
+    required Map payload,
+  }) async {
+    var headers = {
+      'accept': '*/*',
+      'Authorization': 'Bearer ${UserSimplePreferences.getToken()}',
+    };
+
+    //
+
+    Uri url = Uri.parse(baseUrl + endpoint);
+// --form '="SRN_ram1234"' \
+// --form '="SRN_RAM12"' \
+// --form '="SRN_RAM12"'
+    var request = http.MultipartRequest('POST', url)
+      ..fields['oldPassword'] = payload['user_email']
+      // "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
+      ..fields['password'] = payload['user_password']
+      ..fields['confirmPassword'] = payload['user_password'];
+
+    // Add headers
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var responseData = await response.stream.bytesToString();
+      return responseData;
+    } else if (response.statusCode == 401 &&
+        response.stream.bytesToString() == "Token is expired") {
+      Get.toNamed(kSignIns);
+      //return jsonDecode(response.body); // Return parsed JSON response
+    } else {
+      print(response.reasonPhrase);
+      return {"message": "Something went wrong!"};
+    }
+  }
+
+//
+  /////
+
+  // new forgotpassword
+  Future postRequestForgotpasswordFormData({
+    required String endpoint,
+    required Map<dynamic, dynamic> payload,
+    Map<String, String>? customHeaders,
+  }) async {
+    Uri url = Uri.parse(baseUrl + endpoint);
+
+    try {
+      // var header = {
+      //   "Authorization": '${UserSimplePreferences.getToken()}',
+      //   //  "accept": 'application/json'
+      // };
+//       :ram
+// :ram123@gmail.com
+// :Ram@12345
+// :Ram@12345
       var request = http.MultipartRequest('POST', url);
-      // ..fields['email'] = payload['user_email']
-      // ..fields['password'] = payload['user_password'];
+      // ..fields['userName'] = payload['user_email']
+      // ..fields['email'] = payload['user_password']
+      // ..fields['password'] = payload['user_email']
+      // ..fields['confirmPassword'] = payload['user_password'];
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
@@ -350,41 +663,6 @@ class ApiService extends GetxService {
   }
 
   // v2 razottools
-  Future postRequestrazoTools({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['tool_id'] = payload['tool_id']
-        ..fields['user_id'] = payload['user_id'];
-      //
-      //       'tool_id': '4',
-      // 'user_id': '3'
-      //
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   //
   //// Post ScheduleList
@@ -431,51 +709,6 @@ class ApiService extends GetxService {
 // --form 'company_name="sai"'
 ////////////////////////////////
   /// menus
-  Future postRequestAutoComments({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        // ..fields['user_id'] = "5"
-        // ..fields['service_type'] = "auto_reply_negitive_comments_delete"
-        // ..fields['account_link'] = "https://www.instagram.com/bharatsports11/"
-        // ..fields['email'] = "saiteja@gmail.com"
-        // ..fields['mobile'] = "8686180840"
-        // ..fields['demo_schedule'] = "2024-10-23T10:30"
-        // ..fields['name'] = "sai"
-        // ..fields['company_name'] = "sai";
-        ..fields['user_id'] = payload['user_id']
-        ..fields['service_type'] = payload['service_type']
-        ..fields['account_link'] = payload['account_link']
-        ..fields['email'] = payload['email']
-        ..fields['mobile'] = payload['mobile']
-        ..fields['demo_schedule'] = payload['demo_schedule']
-        ..fields['name'] = payload['name']
-        ..fields['company_name'] = payload['company_name'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   // create Digital influencer
   Future postRequestCreateDigitalInfluence({
@@ -523,357 +756,18 @@ class ApiService extends GetxService {
   }
 
   // save digital
-  Future savepostRequestCreateDigitalInfluence({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['gender'] = payload['gender']
-        // ..fields['gender'] = payload['gender']
-        ..fields['age'] = payload['age']
-        ..fields['country'] = payload['country']
-        ..fields['looks'] = payload['looks']
-        ..fields['dress'] = payload['dress']
-        ..fields['background'] = payload['background']
-        ..fields['image_url'] = payload['image_url']
-        ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 // logo
-  Future postRequestlogo({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['user_id'] = payload['user_id']
-        ..fields['words'] = payload['words']
-        ..fields['tagline'] = payload['tagline']
-        ..fields['subject'] = payload['subject']
-        ..fields['style'] = payload['style'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 // create music
 // logo
-  Future postRequestMusic({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['user_id'] = payload['user_id']
-        ..fields['musictype'] = payload['musictype']
-        ..fields['instrument'] = payload['instrument'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // fb crm
-  Future postRequestfbCrm({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['name'] = payload['name']
-        ..fields['email'] = payload['email']
-        ..fields['phone_number'] = payload['phone_number']
-        ..fields['facebook_page_link'] = payload['facebook_page_link']
-        ..fields['ad_link'] = payload['ad_link']
-        ..fields['form_type'] = payload['form_type']
-        ..fields['user_id'] = payload['user_id'];
-      // ..fields['user_id'] = payload['user_id']
-      // ..fields['musictype'] = payload['musictype']
-      // ..fields['instrument'] = payload['instrument'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-// web
-  Future postRequestWebCrm({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['name'] = payload['name']
-        ..fields['email'] = payload['email']
-        ..fields['phone_number'] = payload['phone_number']
-        ..fields['website_link'] = payload['website_link']
-        ..fields['form_type'] = payload['form_type']
-        ..fields['user_id'] = payload['user_id'];
-      // ..fields['user_id'] = payload['user_id']
-      // ..fields['musictype'] = payload['musictype']
-      // ..fields['instrument'] = payload['instrument'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 //// fb2Crm
-  Future postRequestFacebook2Crm({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['own'] = payload['own']
-        ..fields['services'] = payload['services']
-        ..fields['name'] = payload['name']
-        ..fields['email'] = payload['email']
-        ..fields['mobile'] = payload['mobile']
-        ..fields['city'] = payload['city']
-        ..fields['company_name'] = payload['company_name']
-        ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 ////////////////
-// logo
-  Future postRequestAiblog({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['blog_title'] = payload['blog_title']
-        ..fields['content_source'] = payload['content_source']
-        ..fields['language'] = payload['language'];
-      // ..fields['user_id'] = payload['user_id']
-      // ..fields['musictype'] = payload['musictype']
-      // ..fields['instrument'] = payload['instrument'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 // pose
-  Future postRequestPose({
-    File? profilePic,
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['user_id'] = payload['user_id']
-        ..fields['influencer_id'] = payload['influencer_id'];
-      request.files.add(await http.MultipartFile.fromPath(
-        'pose_image',
-        profilePic!.path,
-        contentType: MediaType('image', 'png'), // or other image type
-      ));
 
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
   // Future postRequestPose({
   //   required String endpoint,
   //   required Map<dynamic, dynamic> payload,
@@ -917,169 +811,11 @@ class ApiService extends GetxService {
   // }
 
   // hash tags
-  Future postRequestHashtags({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['headings_or_input'] = payload['headings_or_input'];
-
-      // ..fields['user_id'] = payload['user_id']
-      // ..fields['musictype'] = payload['musictype']
-      // ..fields['instrument'] = payload['instrument'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 ///////
   ///
   // save logo
-  Future savepostRequestlogo({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
 
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['user_id'] = payload['user_id']
-        ..fields['words'] = payload['words']
-        ..fields['subject'] = payload['subject']
-        ..fields['style'] = payload['style']
-        ..fields['tagline'] = payload['tagline']
-        ..fields['image_url'] = payload['image_url'];
-      // ..fields['gender'] = payload['gender']
-      // ..fields['age'] = payload['age']
-      // ..fields['country'] = payload['country']
-      // ..fields['looks'] = payload['looks']
-      // ..fields['dress'] = payload['dress']
-      // ..fields['background'] = payload['background'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-///////////seo
-  Future postRequestSeo({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        // ..fields['user_id'] = "5"
-        // ..fields['service_type'] = "auto_reply_negitive_comments_delete"
-        // ..fields['account_link'] = "https://www.instagram.com/bharatsports11/"
-        // ..fields['email'] = "saiteja@gmail.com"
-        // ..fields['mobile'] = "8686180840"
-        // ..fields['demo_schedule'] = "2024-10-23T10:30"
-        // ..fields['name'] = "sai"
-        // ..fields['company_name'] = "sai";
-
-        ..fields['website_url'] = payload['website_url'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  ///
-
-  // meta face book
-  Future postRequestMetaFacebookpostType({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-//  'post_id': '146',
-//       'meta_key': '_sap_fb_post_type',
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['post_id'] = payload['post_id']
-        ..fields['meta_key'] = payload['meta_key'];
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  //
   Future postRequestrazorPayid({
     required String endpoint,
     required Map<dynamic, dynamic> payload,
@@ -1112,124 +848,8 @@ class ApiService extends GetxService {
   }
 
 //// auto message v2
-  Future postRequestAiTextData({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-//  "user_id": userprofilecontroller.profileData["user_details"]["id"],
-    //    "custom_message": paylodd["customMesg"]
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['heading'] = payload['heading'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // aitext caption v2
-  Future postRequestAiTextDataV2({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    // number_of_words
-    // sap_ai_content_link
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['number_of_words'] = payload['number_of_words']
-        ..fields['sap_ai_content_link'] = payload['sap_ai_content_link'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   //
-  Future postRequestTwitterSavedummyurl({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
-
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['sap_twitter_options[twitter_keys][0][consumer_key]'] =
-            payload['sap_twitter_options[twitter_keys][0][consumer_key]']
-        ..fields['sap_twitter_options[twitter_keys][0][consumer_secret]'] =
-            payload['sap_twitter_options[twitter_keys][0][consumer_secret]']
-        ..fields['sap_twitter_options[twitter_keys][0][oauth_token]'] =
-            payload['sap_twitter_options[twitter_keys][0][oauth_token]']
-        ..fields['sap_twitter_options[twitter_keys][0][oauth_secret]'] =
-            payload['sap_twitter_options[twitter_keys][0][oauth_secret]']
-        // ..fields['sap_twitter_options[tweet_image]'] =
-        //     payload['sap_twitter_options[tweet_image]']
-        ..fields['sap_twitter_options[tw_type_shortner_opt]'] =
-            payload['sap_twitter_options[tw_type_shortner_opt]']
-        ..fields['sap_twitter_options[tw_bitly_access_token]'] =
-            payload['sap_twitter_options[tw_bitly_access_token]']
-        ..fields['sap_twitter_options[tw_shortest_api_token]'] =
-            payload['sap_twitter_options[tw_shortest_api_token]']
-        ..fields['limit_twitter_count'] = payload['limit_twitter_count']
-        ..fields['created_twitter_count'] = payload['created_twitter_count']
-        ..fields['sap_twitter_submit'] = payload['sap_twitter_submit']
-        ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   //////////////////////////////////////////////////////save payment
   Future postRequestsavePayment({
@@ -1271,77 +891,10 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // save tools payment
-  Future postRequestsavetoolsPayment({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
-
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        //     '': '1',
-        // '': '3',
-        // '': 'pay_PC6Q02JsvKUtC6',
-        // '': '1',
-        // '': '20',
-        // '': 'saiteja',
-        // 'customer_email': 'saiteja@gmail.com',
-        // 'payment_date': '2024-12-26'
-        ..fields['tool_id'] = payload['tool_id'] ?? ''
-        ..fields['user_id'] = payload['user_id'] ?? ''
-        ..fields['razorpay_payment_id'] = payload['razorpay_payment_id'] ?? ''
-        ..fields['payment_amount'] = payload['payment_amount'] ?? ''
-        ..fields['max_hits'] = payload['max_hits'] ?? ''
-        ..fields['customer_name'] = payload['customer_name'] ?? ''
-        ..fields['customer_email'] = payload['customer_email'] ?? ''
-        ..fields['payment_date'] = payload['payment_date'] ?? '';
-      // ..fields['additionalData[form-submitted]'] =
-      //     payload['additionalData[form-submitted]'] ?? ''
-      // ..fields['additionalData[sap_firstname]'] =
-      //     payload['additionalData[sap_firstname]'] ?? ''
-      // ..fields['additionalData[sap_lastname]'] =
-      //     payload['additionalData[sap_lastname]'] ?? ''
-      // ..fields['additionalData[sap_email]'] =
-      //     payload['additionalData[sap_email]'] ?? ''
-      // ..fields['additionalData[sap_password]'] =
-      //     payload['additionalData[sap_password]'] ?? ''
-      // ..fields['additionalData[sap_repassword]'] =
-      //     payload['additionalData[sap_repassword]'] ?? ''
-      // ..fields['additionalData[sap_role]'] =
-      //     payload['additionalData[sap_role]'] ?? ''
-      // ..fields['additionalData[sap_plan]'] =
-      //     payload['additionalData[sap_plan]'] ?? ''
-      // ..fields['additionalData[gateway_type]'] =
-      //     payload['additionalData[gateway_type]'] ?? ''
-      // ..fields['razorpay_payment_id'] = payload['razorpay_payment_id'] ?? ''
-      // ..fields['subscription_id'] = payload['subscription_id'] ?? ''
-      // ..fields['plan_price'] = payload['plan_price'] ?? ''
-      // ..fields['apply_coupon'] = payload['apply_coupon'] ?? '';
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -1359,340 +912,8 @@ class ApiService extends GetxService {
 
   ///
 
-// graphs
-  Future postRequestGraphs({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
-
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['social_type'] = payload['social_type'] ?? ''
-        ..fields['start_date'] = payload['start_date'] ?? ''
-        ..fields['end_date'] = payload['end_date'] ?? ''
-        ..fields['filter_type'] = payload['filter_type'] ?? ''
-        ..fields['user_id'] = payload['user_id'] ?? '';
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-//
-  // tumbler save
-  Future postRequestTumblerSavedummyurl({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
-
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['sap_tumblr_options[post_content_size]'] =
-            payload['sap_tumblr_options[post_content_size]']
-        ..fields['sap_tumblr_options[tumblr_keys][0][tumblr_consumer_key]'] =
-            payload['sap_tumblr_options[tumblr_keys][0][tumblr_consumer_key]']
-        ..fields['sap_tumblr_options[tumblr_keys][0][tumblr_consumer_secret]'] =
-            payload[
-                'sap_tumblr_options[tumblr_keys][0][tumblr_consumer_secret]']
-        ..fields['sap_tumblr_options[tumblr_keys][1][tumblr_consumer_key]'] =
-            payload['sap_tumblr_options[tumblr_keys][1][tumblr_consumer_key]']
-        ..fields['sap_tumblr_options[tumblr_keys][1][tumblr_consumer_secret]'] =
-            payload[
-                'sap_tumblr_options[tumblr_keys][1][tumblr_consumer_secret]']
-        ..fields['sap_tumblr_options[posting_type]'] =
-            payload['sap_tumblr_options[posting_type]']
-        ..fields['sap_tumblr_options[tumblr_link]'] =
-            payload['sap_tumblr_options[tumblr_link]']
-        ..fields['sap_tumblr_options[tu_type_shortner_opt]'] =
-            payload['sap_tumblr_options[tu_type_shortner_opt]']
-        ..fields['sap_tumblr_options[tu_bitly_access_token]'] =
-            payload['sap_tumblr_options[tu_bitly_access_token]']
-        ..fields['sap_tumblr_options[tu_shortest_api_token]'] =
-            payload['sap_tumblr_options[tu_shortest_api_token]']
-        ..fields['limit_tumbir_count'] = payload['limit_tumbir_count']
-        ..fields['created_tumbir_count'] = payload['created_tumbir_count']
-        ..fields['sap_tumblr_submit'] = payload['sap_tumblr_submit']
-        ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // semiautomation // publish Post
-  Future postRequestQuickPostPublish({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
-
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ///////////////////
-        ..fields['user_id'] = payload['user_id']!
-        ..fields['enable_video_image'] = payload['enable_video_image']!
-        ..fields['custom_share_link'] = payload['custom_share_link'] ?? ""
-        ..fields['networks[facebook]'] = payload['networks[facebook]']!
-        ..fields['networks[fb_accounts][0]'] =
-            payload['networks[fb_accounts][0]']!
-        ..fields['status'] = payload['status']!
-        ..fields['message'] = payload['message']!
-        ..fields['share_link'] = payload['share_link'] ?? ""
-        ..fields['sap-schedule-time-fb'] = payload['sap-schedule-time-fb']!
-        ..fields['sap-schedule-time-tw'] = payload['sap-schedule-time-tw'] ?? ""
-        ..fields['sap-schedule-time-youtube'] =
-            payload['sap-schedule-time-youtube'] ?? ""
-        ..fields['sap-schedule-time-tumblr'] =
-            payload['sap-schedule-time-tumblr'] ?? ""
-        ..fields['sap-schedule-time-pin'] =
-            payload['sap-schedule-time-pin'] ?? ""
-        ..fields['sap-schedule-time-instagram'] =
-            payload['sap-schedule-time-instagram'] ?? ""
-        ..fields['sap-schedule-time'] = payload['sap-schedule-time'] ?? "";
-      ///////////////
-      // ..fields['sap_tumblr_options[post_content_size]'] =
-      //     payload['sap_tumblr_options[post_content_size]']
-      // ..fields['sap_tumblr_options[tumblr_keys][0][tumblr_consumer_key]'] =
-      //     payload['sap_tumblr_options[tumblr_keys][0][tumblr_consumer_key]']
-      // ..fields['sap_tumblr_options[tumblr_keys][0][tumblr_consumer_secret]'] =
-      //     payload[
-      //         'sap_tumblr_options[tumblr_keys][0][tumblr_consumer_secret]']
-      // ..fields['sap_tumblr_options[tumblr_keys][1][tumblr_consumer_key]'] =
-      //     payload['sap_tumblr_options[tumblr_keys][1][tumblr_consumer_key]']
-      // ..fields['sap_tumblr_options[tumblr_keys][1][tumblr_consumer_secret]'] =
-      //     payload[
-      //         'sap_tumblr_options[tumblr_keys][1][tumblr_consumer_secret]']
-      // ..fields['sap_tumblr_options[posting_type]'] =
-      //     payload['sap_tumblr_options[posting_type]']
-      // ..fields['sap_tumblr_options[tumblr_link]'] =
-      //     payload['sap_tumblr_options[tumblr_link]']
-      // ..fields['sap_tumblr_options[tu_type_shortner_opt]'] =
-      //     payload['sap_tumblr_options[tu_type_shortner_opt]']
-      // ..fields['sap_tumblr_options[tu_bitly_access_token]'] =
-      //     payload['sap_tumblr_options[tu_bitly_access_token]']
-      // ..fields['sap_tumblr_options[tu_shortest_api_token]'] =
-      //     payload['sap_tumblr_options[tu_shortest_api_token]']
-      // ..fields['limit_tumbir_count'] = payload['limit_tumbir_count']
-      // ..fields['created_tumbir_count'] = payload['created_tumbir_count']
-      // ..fields['sap_tumblr_submit'] = payload['sap_tumblr_submit']
-      // ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // add or save Multipost
-  // tumbler save
-  Future postRequestAddSaveMultipost({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
-
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['body'] = payload['body']
-        ..fields['share_link'] = payload['share_link']
-        ..fields['sap_facebook[accounts][0]'] =
-            payload['sap_facebook[accounts][0]']
-        ..fields['sap_facebook[type]'] = payload['sap_facebook[type]']
-        ..fields['sap_facebook[message]'] = payload['sap_facebook[message]']
-        ..fields['sap_facebook_custom_link'] =
-            payload['sap_facebook_custom_link']
-        ..fields['sap_facebbok_post_img'] = payload['sap_facebbok_post_img']
-        ..fields['sap-schedule-time-fb'] = payload['sap-schedule-time-fb']
-        ..fields['networks[facebook]'] = payload['networks[facebook]']
-        ..fields['networks[twitter]'] = payload['networks[twitter]']
-        ..fields['networks[linkedin]'] = payload['networks[linkedin]']
-        ..fields['networks[tumblr]'] = payload['networks[tumblr]']
-        ..fields['networks[pinterest]'] = payload['networks[pinterest]']
-        ..fields['networks[gmb]'] = payload['networks[gmb]']
-        ..fields['networks[instagram]'] = payload['networks[instagram]']
-        ..fields['sap_twitter_user_id[0]'] = payload['sap_twitter_user_id[0]']
-        ..fields['sap_tweet_img'] = payload['sap_tweet_img']
-        ..fields['sap_twitter_msg'] = payload['sap_twitter_msg']
-        ..fields['sap-schedule-time-tw'] = payload['sap-schedule-time-tw']
-        ..fields['sap_linkedin_custom_link'] =
-            payload['sap_linkedin_custom_link']
-        ..fields['sap_linkedin_post_img'] = payload['sap_linkedin_post_img']
-        ..fields['sap_linkedin_custom_title'] =
-            payload['sap_linkedin_custom_title']
-        ..fields['sap_linkedin_custom_description'] =
-            payload['sap_linkedin_custom_description']
-        ..fields['sap-schedule-time-li'] = payload['sap-schedule-time-li']
-        ..fields['sap_tumblr_user_id[0]'] = payload['sap_tumblr_user_id[0]']
-        ..fields['sap_tumblr_posting_type'] = payload['sap_tumblr_posting_type']
-        ..fields['sap_tumblr_custom_link'] = payload['sap_tumblr_custom_link']
-        ..fields['sap_tumblr_post_img'] = payload['sap_tumblr_post_img']
-        ..fields['sap_tumblr_custom_description'] =
-            payload['sap_tumblr_custom_description']
-        ..fields['sap-schedule-time-tumblr'] =
-            payload['sap-schedule-time-tumblr']
-        ..fields['sap_pinterest[accounts][0]'] =
-            payload['sap_pinterest[accounts][0]']
-        ..fields['sap_pinterest[message]'] = payload['sap_pinterest[message]']
-        ..fields['sap_pinterest_custom_link'] =
-            payload['sap_pinterest_custom_link']
-        ..fields['sap_pinterest_post_img'] = payload['sap_pinterest_post_img']
-        ..fields['sap-schedule-time-pin'] = payload['sap-schedule-time-pin']
-        ..fields['sap_gmb[gmb_button_type]'] =
-            payload['sap_gmb[gmb_button_type]']
-        ..fields['sap_gmb[message]'] = payload['sap_gmb[message]']
-        ..fields['sap_gmb_custom_link'] = payload['sap_gmb_custom_link']
-        ..fields['sap_gmb_post_img'] = payload['sap_gmb_post_img']
-        ..fields['sap-schedule-time-gmb'] = payload['sap-schedule-time-gmb']
-        ..fields['sap_instagram[accounts][0]'] =
-            payload['sap_instagram[accounts][0]']
-        ..fields['sap_instagram[message]'] = payload['sap_instagram[message]']
-        ..fields['sap_instagram_post_img'] = payload['sap_instagram_post_img']
-        ..fields['sap-schedule-time-instagram'] =
-            payload['sap-schedule-time-instagram']
-        ..fields['sap-schedule-time'] = payload['sap-schedule-time']
-        ..fields['status'] = payload['status']
-        ..fields['form-submitted'] = payload['form-submitted']
-        ..fields['img'] = payload['img']
-        ..fields['individual_status'] = payload['individual_status']
-        ..fields['ip'] = payload['ip']
-        ..fields['created_date'] = payload['created_date']
-        ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
   //  pinterest
-  Future postRequestPinterestSavedummyurl({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl + endpoint);
-    ////////////////////////////////////////////////////////////////
 
-    ////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['sap_pinterest_options[proxy_url]'] =
-            payload['sap_pinterest_options[proxy_url]']
-        ..fields['sap_pinterest_options[proxy_username]'] =
-            payload['sap_pinterest_options[proxy_username]']
-        ..fields['sap_pinterest_options[proxy_password]'] =
-            payload['sap_pinterest_options[proxy_password]']
-        ..fields['sap_pinterest_options[pin_auth_options]'] =
-            payload['sap_pinterest_options[pin_auth_options]']
-        ..fields['sap_pinterest_options[pinterest_keys][0][app_id]'] =
-            payload['sap_pinterest_options[pinterest_keys][0][app_id]']
-        ..fields['sap_pinterest_options[pinterest_keys][0][app_secret]'] =
-            payload['sap_pinterest_options[pinterest_keys][0][app_secret]']
-        ..fields['sap_pinterest_options[pin_image]'] =
-            payload['sap_pinterest_options[pin_image]']
-        ..fields['sap_pinterest_options[pin_type_shortner_opt]'] =
-            payload['sap_pinterest_options[pin_type_shortner_opt]']
-        ..fields['sap_pinterest_options[pin_bitly_access_token]'] =
-            payload['sap_pinterest_options[pin_bitly_access_token]']
-        ..fields['sap_pinterest_options[pin_shortest_api_token]'] =
-            payload['sap_pinterest_options[pin_shortest_api_token]']
-        ..fields['limit_pinterest_count'] = payload['limit_pinterest_count']
-        ..fields['created_pinterest_count'] = payload['created_pinterest_count']
-        ..fields['sap-pinterest-cookie'] = payload['sap-pinterest-cookie']
-        ..fields['sap_pinterest_submit'] = payload['sap_pinterest_submit']
-        ..fields['user_id'] = payload['user_id'];
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
   //
   // ..fields['sap_pinterest_options[proxy_url]'] =
   //       payload['sap_pinterest_options[proxy_url]']
@@ -1723,40 +944,6 @@ class ApiService extends GetxService {
   //
 
   // youtube save
-  Future postRequestYoutubeSavedummyurl({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl + endpoint);
-
-    try {
-      var headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        if (customHeaders != null) ...customHeaders,
-      };
-
-      var encodedPayload = payload.entries
-          .map((e) =>
-              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}')
-          .join('&');
-
-      var response = await http.post(
-        url,
-        headers: headers,
-        body: encodedPayload,
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      } else {
-        return {"message": response.reasonPhrase ?? "Request failed!"};
-      }
-    } catch (e) {
-      debugPrint("Error occurred: $e");
-      return {"message": "Something went wrong!"};
-    }
-  }
 
 /////
   // post view
@@ -2220,6 +1407,10 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -2278,6 +1469,10 @@ class ApiService extends GetxService {
       var response = await http.put(url, headers: header, body: payload);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -2318,6 +1513,10 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
       // else {
       //   print('Failed to update profile: ${response.reasonPhrase}');
@@ -2372,6 +1571,10 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
       // else {
       //   print('Failed to update profile: ${response.reasonPhrase}');
@@ -2426,6 +1629,10 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
       // else {
       //   print('Failed to update profile: ${response.reasonPhrase}');
@@ -2458,416 +1665,18 @@ class ApiService extends GetxService {
 // (File license, File pan, File adhar,
 //       File authenticationImage, File rc)
   /////////////////////////////Upload DOcs Captain
-  Future patchRequestUploadDocs({
-    required File license,
-    required File pan,
-    required File adhar,
-    required File authenticationImage,
-    required File rc,
-    required String endpoint,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('PATCH', url)
-        ..headers['Authorization'] =
-            'Bearer ${UserSimplePreferences.getToken()}';
-
-      request.files.add(await http.MultipartFile.fromPath(
-        'license',
-        license.path,
-        contentType: MediaType('image', 'png'),
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'pan',
-        pan.path,
-        contentType: MediaType('image', 'png'),
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'adhar',
-        adhar.path,
-        contentType: MediaType('image', 'png'),
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'authenticationImage',
-        authenticationImage.path,
-        contentType: MediaType('image', 'png'),
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'rc',
-        rc.path,
-        contentType: MediaType('image', 'png'),
-      ));
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   //////////////////////////////////////////////////////////////////////////////
-  Future patchRequestUploadVrefiDocs({
-    required File pan,
-    required File adhar,
-    required String endpoint,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('PATCH', url)
-        ..headers['Authorization'] =
-            'Bearer ${UserSimplePreferences.getToken()}';
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'pan',
-        pan.path,
-        contentType: MediaType('image', 'png'),
-      ));
-      request.files.add(await http.MultipartFile.fromPath(
-        'adhar',
-        adhar.path,
-        contentType: MediaType('image', 'png'),
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
   ////////////////////////////////////////////////////////////////
 
   ///////////////////User Upload DOcs
-  Future patchRequestUserUploadDocs({
-    required File authenticationImage,
-    required String endpoint,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('PATCH', url)
-        ..headers['Authorization'] =
-            'Bearer ${UserSimplePreferences.getToken()}';
-
-      request.files.add(await http.MultipartFile.fromPath(
-        'authenticationImage',
-        authenticationImage.path,
-        contentType: MediaType('image', 'png'),
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   //////////////////////////////////////CaptainDutyAPi///////////////////////////
-  Future patchRequestCaptainDuty({
-    required File profilePic,
-    required String endpoint,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('PATCH', url)
-        ..headers['Authorization'] =
-            'Bearer ${UserSimplePreferences.getToken()}';
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'captainLiveImage',
-        profilePic.path,
-        contentType: MediaType('image', 'png'),
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
   ////////////////////////////////////////////////////////////////////////////////
 
   //////////
-  ///
-  Future patchRequestEditProfilebank({
-    required File profilePic,
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('PATCH', url)
-        ..headers['Authorization'] =
-            'Bearer ${UserSimplePreferences.getToken()}'
-        ..fields['bloodBankName'] = payload['bloodBankName'];
-      request.files.add(await http.MultipartFile.fromPath(
-        'image',
-        profilePic.path,
-        contentType: MediaType('image', 'png'), // or other image type
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  Future postRequestwithImageandToken({
-    required File profilePic,
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..headers['Authorization'] =
-            'Bearer ${UserSimplePreferences.getToken()}'
-        ..fields['leaveType'] = payload['leaveType']
-        ..fields['dateRange'] = payload['dateRange']
-        ..fields['reason'] = payload['reason'];
-
-      request.files.add(await http.MultipartFile.fromPath(
-        'documente',
-        profilePic.path,
-        contentType: MediaType('image', 'png'), // or other image type
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  ///Post  request form data
-  Future postRequestDonorSignupFormData({
-    required File image,
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('POST', url)
-        // ..headers['Authorization'] =
-        //     'Bearer ${UserSimplePreferences.getToken()}'  // termsAndCondition
-        ..fields['email'] = payload['email']
-        ..fields['password'] = payload['password']
-        ..fields['firstName'] = payload['firstName']
-        ..fields['lastName'] = payload['lastName']
-        ..fields['empId'] = payload['empId']
-        ..fields['dateOfBirth'] = payload['dateOfBirth']
-        ..fields['role'] = payload['role']
-        ..fields['gender'] = payload['gender']
-        ..fields['companyName'] = payload['companyName']
-        ..fields['termsAndCondition'] = payload['termsAndCondition'];
-
-      request.files.add(await http.MultipartFile.fromPath(
-        'authenticationImage',
-        image.path,
-        contentType: MediaType('image', 'png'), // or other image type
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
 ///////////////////////
 //{
@@ -2885,70 +1694,6 @@ class ApiService extends GetxService {
 ///////////////////
   // UserBookRide with Image
   ////////////////////////////////////////////////////////////////////////////////////////
-
-  Future postRequestUserBookFormData({
-    required File image,
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    required String token,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['dropLangitude'] = payload['dropLangitude']
-        ..fields['dropLongitude'] = payload['dropLongitude']
-        ..fields['pickupLangitude'] = payload['pickupLangitude']
-        ..fields['pickupLongitude'] = payload['pickupLongitude']
-        ..fields['pickupAddress'] = payload['pickupAddress']
-        ..fields['dropAddress'] = payload['dropAddress']
-        ..fields['price'] = payload['price']
-        ..fields['orderPlaceTime'] = payload['orderPlaceTime']
-        ..fields['orderPlaceDate'] = payload['orderPlaceDate']
-        ..fields['vehicleType'] = payload['vehicleType'];
-
-      request.files.add(await http.MultipartFile.fromPath(
-        'userAuthenticationImage',
-        image.path,
-        contentType: MediaType('image', 'png'), // or other image type
-      ));
-
-      // Add the token to the headers
-      request.headers['Authorization'] = 'Bearer $token';
-
-      // Add custom headers if any
-      if (customHeaders != null) {
-        request.headers.addAll(customHeaders);
-      }
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      } else {
-        debugPrint('Failed to update profile: ${response.reasonPhrase}');
-        debugPrint('Response body: ${response.body}');
-        return {"message": "Failed to update profile"};
-      }
-    } catch (e) {
-      debugPrint("$e");
-      if (e is DioError) {
-        if (e.response?.statusCode == 404) {
-          return e.response?.data;
-        } else if (e.response?.statusCode == 401) {
-          return e.response?.data;
-        } else if (e.response?.statusCode == 400) {
-          return e.response?.data;
-        } else {
-          return {"message": "Something went wrong!"};
-        }
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   ///////////////////////////////////////////////////////////////////////////////////
   // Future postRequestUserBookFormData({
@@ -3014,76 +1759,6 @@ class ApiService extends GetxService {
   //   }
   // }
 
-  ///
-
-  //]
-  Future postRequestDonorSignupFormDatabloodBank({
-    required File image,
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    //   //   'first_name': payload['firstName'],
-    //   //   'last_name': payload['lastName'],
-    try {
-      var request = http.MultipartRequest('POST', url)
-        // ..headers['Authorization'] =
-        //     'Bearer ${UserSimplePreferences.getToken()}'
-        ..fields['bloodBankName'] = payload['bloodBankName']
-        // ..fields['lastName'] = payload['lastName']
-        ..fields['mobile'] = payload['mobile']
-        ..fields['email'] = payload['email']
-        // ..fields['dateOfBirth'] = payload['dateOfBirth']
-        // ..fields['bloodGroup'] = payload['bloodGroup']
-        // ..fields['gender'] = payload['gender']
-        // ..fields['locations'] = payload['locations']
-        ..fields['address'] = payload['address']
-        ..fields['longitude'] = payload['longitude']
-        ..fields['latitude'] = payload['latitude']
-        // ..fields['signupTime'] = payload['signupTime']
-        ..fields['termAndCondition'] = payload['termAndCondition'];
-
-      request.files.add(await http.MultipartFile.fromPath(
-        'image',
-        image.path,
-        contentType: MediaType('image', 'png'), // or other image type
-      ));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      }
-      // else {
-      //   print('Failed to update profile: ${response.reasonPhrase}');
-      //   print('Response body: ${response.body}');
-      // }
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-      // var header = {
-      //   "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      // };
-      // var response = await http.patch(url, headers: header, body: payload);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.body;
-      // }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
   //
 
   //////////
@@ -3135,96 +1810,7 @@ class ApiService extends GetxService {
     }
   }
 
-// DonorRegister
-  Future postRequestDonorRegister({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = '*/*';
-
-      var response = await dio.post("$url", data: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
   // Postno Token
-
-  Future<Map<String, dynamic>> postRequestNotoken({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint
-        // "http://womenrapido.nuhvin.com/auth/send-otp"
-        ); // Replace with your baseUrl + endpoint if needed
-
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-
-    if (customHeaders != null) {
-      headers.addAll(customHeaders);
-    }
-
-    try {
-      var response = await http.post(
-        url,
-        headers: headers,
-        body: json.encode(payload),
-      );
-
-      // Handle 301 status code
-      if (response.statusCode == 301 || response.statusCode == 302) {
-        String? newUrl = response.headers['location'];
-        if (newUrl != null) {
-          url = Uri.parse(newUrl);
-          response = await http.post(
-            url,
-            headers: headers,
-            body: json.encode(payload),
-          );
-        }
-      }
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return json.decode(response.body);
-      } else {
-        return handleError(response);
-      }
-    } catch (e) {
-      debugPrint("$e");
-      return {"message": "Something went wrong!"};
-    }
-  }
-
-  Map<String, dynamic> handleError(http.Response response) {
-    if (response.statusCode == 404 ||
-        response.statusCode == 401 ||
-        response.statusCode == 400) {
-      return json.decode(response.body);
-    } else {
-      return {"message": "Something went wrong!"};
-    }
-  }
 
 //   import 'package:flutter/foundation.dart';
 // import 'package:http/http.dart' as http;
@@ -3274,69 +1860,6 @@ class ApiService extends GetxService {
   //     return {"message": "Something went wrong!"};
   //   }
   // }
-
-  Future postRequestNotokentwo({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
-
-      var response = await dio.post("$url", data: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  //PostToken
-  Future postRequestToken({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
-      dio.options.headers["Authorization"] =
-          'Bearer ${UserSimplePreferences.getToken()}';
-
-      var response = await dio.post("$url",
-          //  "https://blood-server-us7o.onrender.com/auth/registor/donor",
-          data: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
 
   /////////////////////Verify Docs
 
@@ -3446,38 +1969,6 @@ class ApiService extends GetxService {
 
   //     Response response = await _dio.patch('/users/$userId', data: formData);
 
-  // ////////////
-  Future patchRequestList({
-    required String endpoint,
-    required List payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
-      dio.options.headers["Authorization"] =
-          'Bearer ${UserSimplePreferences.getToken()}';
-
-      var response = await dio.post("$url", data: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
   //
 
   Future patchRequest({
@@ -3494,98 +1985,6 @@ class ApiService extends GetxService {
           'Bearer ${UserSimplePreferences.getToken()}';
 
       var response = await dio.patch("$url", data: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  //pastch no tokrn
-  Future patchRequestNoToken({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
-
-      var response = await dio.patch("$url", data: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // PatchRequestNo Payload
-  Future patchRequestNopayload({
-    required String endpoint,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
-      dio.options.headers["Authorization"] =
-          'Bearer ${UserSimplePreferences.getToken()}';
-
-      var response = await dio.patch("$url");
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    }
-  }
-
-  // post like
-  Future postlikeRequest({
-    required String endpoint,
-    //  required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      Dio dio = Dio();
-      dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
-      dio.options.headers["Authorization"] =
-          'Bearer ${UserSimplePreferences.getToken()}';
-      var response = await dio.post("$url");
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
       }
@@ -3634,67 +2033,6 @@ class ApiService extends GetxService {
     }
   }
 
-  Future<dynamic> postAuthRequest({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-    try {
-      var response = await http.post(url, body: payload);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      } else if (response.statusCode == 404) {
-        return response.body;
-      } else if (response.statusCode == 401) {
-        return response.body;
-      } else if (response.statusCode == 400) {
-        return response.body;
-      } else if (response.statusCode == 500) {
-        return response.body;
-      } else {
-        return {"message": "Something went wrong!"};
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      return {"message": "$e"};
-    }
-  }
-
-  // posr save logo 2
-  ///
-  Future<dynamic> postAuthRequestSavelogo2Raw({
-    required String endpoint,
-    required Map<dynamic, dynamic> payload,
-    Map<String, String>? customHeaders,
-  }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
-
-    // Default headers
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-
-    if (customHeaders != null) {
-      headers.addAll(customHeaders);
-    }
-
-    try {
-      // JSON encode the payload
-      String body = json.encode(payload);
-
-      var response = await http.post(url, body: body, headers: headers);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.body;
-      } else {
-        // Handle error responses
-        return response.body;
-      }
-    } catch (e) {
-      debugPrint("Error: $e");
-      return json.encode({"message": "Something went wrong: $e"});
-    }
-  }
-
 //////////////////////////
   // Future<dynamic> postAuthRequestSavelogo2Raw({
   //   required String endpoint,
@@ -3730,61 +2068,6 @@ class ApiService extends GetxService {
 // Get Token
 /////////////////////////////////////////////////////////////////////////////////
 
-  Future<dynamic> getter({
-    required String endpoint,
-  }) async {
-    Uri url = Uri.parse(
-        baseUrl + endpoint); // Replace with your baseUrl + endpoint if needed
-
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${UserSimplePreferences.getToken()}'
-    };
-
-    try {
-      var response = await http.get(
-        url,
-        headers: headers,
-      );
-
-      // Handle 301 status code
-      if (response.statusCode == 301 || response.statusCode == 302) {
-        String? newUrl = response.headers['location'];
-        if (newUrl != null) {
-          url = Uri.parse(newUrl);
-          response = await http.get(
-            url,
-            headers: headers,
-          );
-        }
-      }
-
-      //    if (response.statusCode == 200) {
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return json.decode(response.body);
-        // return json.decode(response.body);
-      } else {
-        return handleGetError(response);
-      }
-    } catch (e) {
-      debugPrint("$e");
-      return {"message": "Something went wrong!"};
-    }
-  }
-
-  Map<String, dynamic> handleGetError(http.Response response) {
-    if (response.statusCode == 404 ||
-        response.statusCode == 401 ||
-        response.statusCode == 400) {
-      return json.decode(response.body);
-    } else {
-      return {"message": "Something went wrong!"};
-    }
-  }
-
-//////////////////////////////////////////////
-
   // GetNoToken
   Future<dynamic> getRequestNoToken({
     required String endpoint,
@@ -3792,10 +2075,21 @@ class ApiService extends GetxService {
   }) async {
     Uri url = Uri.parse(baseUrl + endpoint);
     try {
-      var response = await http.get(url);
+      var header = {
+        "Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
+        "accept": '*/*',
+      };
+
+      var response = await http.get(url, headers: header);
+
+      // var response = await http.get(url);
       // var response = await http.get(url, headers: header);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -3811,30 +2105,67 @@ class ApiService extends GetxService {
     }
   }
 
+  // DeletID
+  // Future<dynamic> deleterequestForID({
+  //   required String endpoint,
+  //   Map<String, String>? customHeaders,
+  // }) async {
+  //   Uri url = Uri.parse(baseUrl + endpoint);
+  //   try {
+  //     var header = {
+  //       //"Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
+  //       "accept": '*/*',
+  //     };
+
+  //     var response = await http.delete(url, headers: header);
+
+  //     // var response = await http.get(url);
+  //     // var response = await http.get(url, headers: header);
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       return response.body;
+  //     }
+  //   } on DioError catch (e) {
+  //     debugPrint("$e");
+  //     if (e.response?.statusCode == 404) {
+  //       return e.response?.data;
+  //     } else if (e.response?.statusCode == 401) {
+  //       return e.response?.data;
+  //     } else if (e.response?.statusCode == 400) {
+  //       return e.response?.data;
+  //     } else {
+  //       return {"message": "Something went wrong!"};
+  //     }
+  //   }
+  // }
   //
-  // GetNoToken
-  Future<dynamic> getRequestNoTokendummy({
+  Future<dynamic> deleteRequestForID({
     required String endpoint,
     Map<String, String>? customHeaders,
   }) async {
-    Uri url = Uri.parse(dummybaseUrl2 + endpoint);
+    Uri url = Uri.parse(baseUrl + endpoint);
     try {
-      var response = await http.get(url);
-      // var response = await http.get(url, headers: header);
+      var header = {
+        "Authorization": 'Bearer ${UserSimplePreferences.getToken()}',
+        "accept": '*/*',
+      };
+
+      var response = await http.delete(url, headers: header);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // Since your backend returns a String, return response.body directly
         return response.body;
-      }
-    } on DioError catch (e) {
-      debugPrint("$e");
-      if (e.response?.statusCode == 404) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 401) {
-        return e.response?.data;
-      } else if (e.response?.statusCode == 400) {
-        return e.response?.data;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
+      } else if (response.statusCode == 404) {
+        return "Razorpay Order ID not found. Deletion failed.";
       } else {
-        return {"message": "Something went wrong!"};
+        return "Something went wrong!";
       }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return "Something went wrong!";
     }
   }
 
@@ -3858,6 +2189,10 @@ class ApiService extends GetxService {
       // var response = await dio.post("$url",);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.data) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -3927,6 +2262,10 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(responseBody);
+      } else if (response.statusCode == 401 &&
+          jsonDecode(responseBody) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       } else {
         return {"message": "Error: ${response.reasonPhrase}"};
       }
@@ -3950,6 +2289,10 @@ class ApiService extends GetxService {
       var response = await http.post(url, body: payload, headers: header);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
       debugPrint("$e");
@@ -3965,42 +2308,127 @@ class ApiService extends GetxService {
     }
   }
 
-  static updateProfilePhoto(File file) {}
-  Future<dynamic> putForProfileUpdateRequest({
+  //
+  Future postIssuesRequest({
     required String endpoint,
     required Map<dynamic, dynamic> payload,
     Map<String, String>? customHeaders,
     File? image,
   }) async {
     Uri url = Uri.parse(baseUrl + endpoint);
+
     try {
-      var headers = {
-        "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
-      };
-      var request = http.MultipartRequest('PUT', Uri.parse(baseUrl + endpoint));
-      request.fields.addAll({
-        'full_name': payload["full_name"],
-        'phone': payload["phone"],
-        'gender': payload["gender"],
-        'constituency': payload["constituency"]
-      });
-      if (image != null) {
-        request.files
-            .add(await http.MultipartFile.fromPath('image', image.path));
+      var request = http.MultipartRequest('PUT', url)
+        ..headers.addAll({
+          'Content-Type': 'application/json',
+          "Authorization": 'Bearer ${UserSimplePreferences.getToken()}'
+        })
+        ..fields['firstName'] = payload['firstName'] ?? ""
+        ..fields['lastName'] = payload['lastName'] ?? ""
+        ..fields['mobileNumber'] = payload['mobileNumber'] ?? ""
+        ..fields['dateOfBirth'] = payload['dateOfBirth'] ?? ""
+        ..fields['timeOfBirth'] = payload['timeOfBirth'] ?? ""
+        ..fields['pincode'] = payload['pincode'] ?? ""
+        ..fields['location'] = payload['location'] ?? ""
+        ..fields['style'] = payload['style'] ?? ""
+        ..fields['language'] = payload['language'] ?? ""
+        ..fields['gender'] = payload['gender'] ?? "";
+
+      if (image != null && image.existsSync()) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'uploadImage',
+          image.path,
+          contentType: MediaType('image', 'png'),
+        ));
       }
-      request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
 
-      if (response.statusCode == 200) {
-        return {"status": "Updated"};
-      } else {
-        return ({"message": response.reasonPhrase});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
       }
     } on DioError catch (e) {
-      return {"message": "$e"};
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
     }
   }
+
+  // Future postIssuesRequest({
+  //   required String endpoint,
+  //   required Map<dynamic, dynamic> payload,
+  //   Map<String, String>? customHeaders,
+  //   File? image,
+  // }) async {
+  //   Uri url = Uri.parse(baseUrl + endpoint);
+
+  //   try {
+  //     var request = http.MultipartRequest('PUT', url)
+  //       ..fields['firstName'] = payload['firstName'] ?? ""
+  //       ..fields['lastName'] = payload['lastName'] ?? ""
+  //       ..fields['mobileNumber'] = payload['mobileNumber'] ?? ""
+  //       ..fields['dateOfBirth'] = payload['dateOfBirth'] ?? ""
+  //       ..fields['timeOfBirth'] = payload['timeOfBirth'] ?? ""
+  //       ..fields['pincode'] = payload['pincode'] ?? ""
+  //       ..fields['location'] = payload['location'] ?? ""
+  //       ..fields['style'] = payload['style'] ?? ""
+  //       ..fields['language'] = payload['language'] ?? ""
+  //       ..fields['gender'] = payload['gender'] ?? "";
+  //     // ..fields['state'] = payload['state'] ?? ""
+  //     // ..fields['issue_type'] = payload['issue_type'] ?? "";
+
+  //     if (image != null && image.existsSync()) {
+  //       request.files.add(await http.MultipartFile.fromPath(
+  //         'uploadImage',
+  //         image.path,
+  //         contentType: MediaType('image', 'png'),
+  //       ));
+  //     }
+
+  //     // Add video if not null
+  //     // if (video != null && video.existsSync()) {
+  //     //   request.files.add(await http.MultipartFile.fromPath(
+  //     //     'attachment', // Field name expected by the API
+  //     //     video.path,
+  //     //     contentType:
+  //     //         MediaType('video', 'mp4'), // Specify the content type for video
+  //     //   ));
+  //     // }
+
+  //     var streamedResponse = await request.send();
+  //     var response = await http.Response.fromStream(streamedResponse);
+
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       return response.body;
+  //     }
+  //   } on DioError catch (e) {
+  //     debugPrint("$e");
+  //     if (e.response?.statusCode == 404) {
+  //       return e.response?.data;
+  //     } else if (e.response?.statusCode == 401) {
+  //       return e.response?.data;
+  //     } else if (e.response?.statusCode == 400) {
+  //       return e.response?.data;
+  //     } else {
+  //       return {"message": "Something went wrong!"};
+  //     }
+  //   }
+  // }
+  //
+
+  static updateProfilePhoto(File file) {}
 
   Future<dynamic> postReportRequest(
       {required String endpoint,
@@ -4047,32 +2475,6 @@ class ApiService extends GetxService {
     }
   }
 
-  Future<dynamic> postToolRazorpay({
-    required String endpoint,
-    required payload,
-  }) async {
-    Uri url = Uri.parse(baseUrl + endpoint);
-
-    try {
-      var request = http.MultipartRequest('POST', url);
-      request.fields.addAll({
-        'tool_id': payload["tool_id"],
-        'user_id': payload["user_id"],
-      });
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Parse the response body
-        String responseBody = await response.stream.bytesToString();
-        return jsonDecode(responseBody);
-      } else {
-        return {"message": response.reasonPhrase};
-      }
-    } catch (e) {
-      return {"message": "Error: $e"};
-    }
-  }
   //
   // Future<dynamic> postToolRazorpay({
   //   required String endpoint,

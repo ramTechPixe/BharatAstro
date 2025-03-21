@@ -8,15 +8,41 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // ProfileController userprofilecontroller = Get.put(ProfileController());
+  AuthController authcontroller = Get.put(AuthController());
   /////////////////////////////////////////////
+  // bool? isUserLoggedIn;
+  // @override
+  // void initState() {
+  //   Future.delayed(const Duration(seconds: 3), () async {
+  //     Get.toNamed(kOnboarding);
+  //   });
+  //   super.initState();
+  // }
+  //
   bool? isUserLoggedIn;
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3), () async {
-      Get.toNamed(kOnboarding);
-    });
     super.initState();
+
+    //////////////////////////////
+    isUserLoggedIn = UserSimplePreferences.getLoginStatus();
+    Future.delayed(const Duration(seconds: 2), () async {
+      if (isUserLoggedIn != null && isUserLoggedIn == true) {
+        var payload = {
+          "user_email": "${UserSimplePreferences.getUserEmail()}",
+          "user_password": "${UserSimplePreferences.getUserPassword()}"
+        };
+
+        authcontroller.userSignIn(payload);
+        // if (_formKey.currentState!.validate()) {
+        //   authcontroller.userSignIn(payload);
+        // }
+        //  Get.toNamed(kNavigation);
+      } else {
+        Get.toNamed(kOnboarding);
+      }
+    });
+    /////////////////////////////
   }
 
   @override

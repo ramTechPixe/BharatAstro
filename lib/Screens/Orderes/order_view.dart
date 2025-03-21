@@ -9,6 +9,7 @@ class OrderView extends StatefulWidget {
 }
 
 class _OrderViewState extends State<OrderView> {
+  DashboardController dashController = Get.put(DashboardController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,12 +57,20 @@ class _OrderViewState extends State<OrderView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("OrderId:#738289511",
+                        Text(
+                            dashController.orderDetails["order_id"] == null
+                                ? "OrderId: "
+                                : "OrderId:${dashController.orderDetails["order_id"]}",
+                            //"OrderId:#738289511",
                             style: GoogleFonts.poppins(
                                 fontSize: 11.sp,
                                 fontWeight: kFW400,
                                 color: kblack)),
-                        Text("Date: 2025-01-23 14:48",
+                        Text(
+                            dashController.orderDetails["orderDate"] == null
+                                ? "Date: "
+                                : "Date: ${dashController.orderDetails["orderDate"]}",
+                            //"Date: 2025-01-23 14:48",
                             style: GoogleFonts.poppins(
                                 fontSize: 11.sp,
                                 fontWeight: kFW400,
@@ -77,12 +86,17 @@ class _OrderViewState extends State<OrderView> {
                     ),
                     Row(
                       children: [
-                        Text("Item:",
+                        Text("Plan Type: ",
                             style: GoogleFonts.poppins(
                                 fontSize: 11.sp,
                                 fontWeight: kFW400,
                                 color: kblack)),
-                        Text(" Astro Card",
+                        Text(
+                            dashController.orderDetails["planType"] == null
+                                ? ""
+                                : " ${dashController.orderDetails["planType"]}",
+
+                            // " Astro Card",
                             style: GoogleFonts.poppins(
                                 fontSize: kFourteenFont,
                                 fontWeight: kFW500,
@@ -100,7 +114,7 @@ class _OrderViewState extends State<OrderView> {
                     SizedBox(
                       height: 10.h,
                     ),
-                    Text("Delivery Status",
+                    Text("Delivery Status :",
                         style: GoogleFonts.poppins(
                             fontSize: 11.sp,
                             fontWeight: kFW400,

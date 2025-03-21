@@ -22,6 +22,7 @@ export 'package:bharatastro/untils/routes.dart';
 export 'package:bharatastro/untils/user_simple_preferences.dart';
 
 export 'package:bharatastro/Screens/splash.dart';
+export 'package:bharatastro/Screens/splash_two.dart';
 export 'package:bharatastro/Screens/onboarding_screen.dart';
 
 export 'package:bharatastro/components/custom_appbar.dart';

@@ -9,6 +9,11 @@ class Routes {
         transition: Transition.rightToLeft,
         page: () => SplashScreen()),
     GetPage(
+        name: kSplashTwo,
+        transition: Transition.rightToLeft,
+        page: () => SplashScreenTwo()),
+
+    GetPage(
         name: kOnboarding,
         transition: Transition.rightToLeft,
         page: () => const OnboardingScreen()),
@@ -75,7 +80,10 @@ class Routes {
     GetPage(
         name: kNavigation,
         transition: Transition.rightToLeft,
-        page: () => Bottom_navigation()),
+        // page: () => Bottom_navigation()),
+        // page: () => BottomNavigation()),
+        page: () => NavigationBarScreen()),
+
     GetPage(
         name: kAddUser,
         transition: Transition.rightToLeft,

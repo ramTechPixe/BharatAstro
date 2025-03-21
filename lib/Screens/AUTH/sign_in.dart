@@ -62,11 +62,21 @@ class _SignInState extends State<SignIn> {
 
   @override
   void initState() {
-    // setState(() {
-    //   authcontroller.UserEmailSignInController.text = "androidtest@gmail.com";
+    setState(() {
+      authcontroller.UserEmailSignInController.text =
+          "sugaliramanayak7777@gmail.com";
+      authcontroller.UserEmailPasswordController.text = "SRN@ram12345";
+      // authcontroller.UserEmailSignInController.text = "ram123@gmail.com";
+      // authcontroller.UserEmailPasswordController.text = "ram1234";
+      // "ramNayak123@";
 
-    //   authcontroller.UserEmailPasswordController.text = "Bstore@123";
-    // });
+//email:sugaliramanayak777@gmail.com
+//password:SRN_ram1234
+      // authcontroller.UserEmailSignInController.text =
+      //     "sugaliramanayak77775@gmail.com";
+
+      // authcontroller.UserEmailPasswordController.text = "ramNayak123@";
+    });
 
     super.initState();
   }

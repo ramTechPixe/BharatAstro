@@ -107,71 +107,22 @@ class AuthController extends GetxController {
   var signUpCouponLoading = false.obs;
   var isCouponApplied = false.obs;
   var signUpCoupondata = {}.obs;
-  Future<void> SignUpCoupon(Map payload) async {
-    signUpCouponLoading(true);
 
-    try {
-      //
-      var response = await apiService.postRequestSignUpCouponsFormData(
-          endpoint: "check-coupon-code-api/", payload: payload);
-
-      //    Map data = jsonDecode(response);
-      Map data = jsonDecode(response);
-      print(data);
-
-      if (data["message"] == "Coupon code is applied successfully") {
-        signUpCoupondata.value = data["data"];
-        isCouponApplied.value = true;
-        Fluttertoast.showToast(
-          msg: data["message"],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: KDarkPink_twg,
-          textColor: Kwhite,
-          fontSize: 16.0,
-        );
-
-        debugPrint("object");
-      } else {
-        Fluttertoast.showToast(
-          msg: data["message"],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: KDarkPink_twg,
-          textColor: Kwhite,
-          fontSize: 16.0,
-        );
-      }
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Something went wrong",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: KDarkPink_twg,
-        textColor: Kwhite,
-        fontSize: 16.0,
-      );
-    } finally {
-      signUpCouponLoading(false);
-    }
-  }
 //////
 
   ////////
 // bhatatAstro
   var selectedPlan = "card".obs;
+  var selectedPlanIndex = 0.obs;
   var userSignInLoading = false.obs;
   Future<void> userSignIn(Map payload) async {
     userSignInLoading(true);
 
     try {
       //
-      var response = await apiService.postRequestSignInFormData(
-          endpoint:
-              "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
+      var response = await apiService.postRequestSignInV2FormData(
+          endpoint: "api/auth/login",
+          // "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
           payload: payload);
 //    http://192.168.1.29:9094/api/auth/login?email=raja123%40gmail.com&password=raja123
       //    Map data = jsonDecode(response);
@@ -184,16 +135,18 @@ class AuthController extends GetxController {
 
         await UserSimplePreferences.setUserDetails(
             data["paymentDetails"][0] ?? {});
+        await UserSimplePreferences.setUserEmail(payload['user_email']);
+        await UserSimplePreferences.setUserPassword(payload['user_password']);
 
-        Fluttertoast.showToast(
-          msg: "Logged in Successfully",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Kform_border_twg,
-          textColor: Kwhite,
-          fontSize: 16.0,
-        );
+        // Fluttertoast.showToast(
+        //   msg: "Logged in Successfully",
+        //   toastLength: Toast.LENGTH_SHORT,
+        //   gravity: ToastGravity.BOTTOM,
+        //   timeInSecForIosWeb: 1,
+        //   backgroundColor: Kform_border_twg,
+        //   textColor: Kwhite,
+        //   fontSize: 16.0,
+        // );
         //userprofilecontroller.userProfileNavigation();
         Get.toNamed(kNavigation);
 
@@ -233,6 +186,81 @@ class AuthController extends GetxController {
       userSignInLoading(false);
     }
   }
+  // ksplashSignIn
+
+  Future<void> userSignInSplash(Map payload) async {
+    userSignInLoading(true);
+
+    try {
+      //
+      var response = await apiService.postRequestSignInV2FormData(
+          endpoint: "api/auth/login",
+          // "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
+          payload: payload);
+//    http://192.168.1.29:9094/api/auth/login?email=raja123%40gmail.com&password=raja123
+      //    Map data = jsonDecode(response);
+      Map data = jsonDecode(response);
+      print(data);
+      if (data["token"] != null) {
+        await UserSimplePreferences.setLoginStatus(loginStatus: true);
+
+        await UserSimplePreferences.setToken(token: data["token"].toString());
+
+        await UserSimplePreferences.setUserDetails(
+            data["paymentDetails"][0] ?? {});
+        await UserSimplePreferences.setUserEmail(payload['user_email']);
+        await UserSimplePreferences.setUserPassword(payload['user_password']);
+
+        // Fluttertoast.showToast(
+        //   msg: "Logged in Successfully",
+        //   toastLength: Toast.LENGTH_SHORT,
+        //   gravity: ToastGravity.BOTTOM,
+        //   timeInSecForIosWeb: 1,
+        //   backgroundColor: Kform_border_twg,
+        //   textColor: Kwhite,
+        //   fontSize: 16.0,
+        // );
+        //userprofilecontroller.userProfileNavigation();
+        Get.toNamed(kSplashTwo);
+
+        print("object");
+      } else if (data["status"] == "error") {
+        Fluttertoast.showToast(
+          msg: response["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: KDarkPink_twg,
+          textColor: Kwhite,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: data["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: KDarkPink_twg,
+          textColor: Kwhite,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Something went wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: KDarkPink_twg,
+        textColor: Kwhite,
+        fontSize: 16.0,
+      );
+    } finally {
+      userSignInLoading(false);
+    }
+  }
+
+// deleShipid
 
   // bharat astrro sign up
 
@@ -241,13 +269,17 @@ class AuthController extends GetxController {
 
     try {
       //
-      var response = await apiService.postRequestSignInFormData(
-          endpoint:
-              //  "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
-              "auth/save?userName=${payload['name']}&email=${payload['email']}&password=${payload['password']}&confirmPassword=${payload['cpassword']}",
+      var response = await apiService.postRequestSignUpFormData(
+          endpoint: "api/auth/save",
+          //  "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
+          //   "auth/save?userName=${payload['name']}&email=${payload['email']}&password=${payload['password']}&confirmPassword=${payload['cpassword']}",
           payload: payload);
 //     http://192.168.1.29:9094/api/auth/save?userName=raja&email=raja123%40gmail.com&password=raja123&confirmPassword=raja123
       //    Map data = jsonDecode(response);
+//       userName:ram
+// email:ram123@gmail.com
+// password:Ram@12345
+// confirmPassword:Ram@12345
       Map data = jsonDecode(response);
       print(data);
       if (data["userProfileId"] != null) {
@@ -314,10 +346,10 @@ class AuthController extends GetxController {
 
     try {
       //
-      var response = await apiService.postRequestSignInFormData(
+      var response = await apiService.postRequestForgotpasswordFormData(
           // endpoint:
           //     "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
-          endpoint: "auth/forgotPasswordSendOTP/${payload['user_email']}",
+          endpoint: "api/auth/forgotPasswordSendOTP/${payload['user_email']}",
           payload: payload);
 //      'http://192.168.1.29:9094/api/auth/forgotPasswordSendOTP/sugaliramanayak777%40gmail.com' \
 
@@ -381,12 +413,12 @@ class AuthController extends GetxController {
 
     try {
       //
-      var response = await apiService.postRequestSignInFormData(
+      var response = await apiService.postRequestForgotpasswordFormData(
           //user_email
           // endpoint:  //
           //     "auth/login?email=${payload['user_email']}&password=${payload['user_password']}",
           endpoint:
-              "auth/forgotPassword?email=${payload['user_email']}&newPassword=${payload['newPassword']}&otp=${payload['otp']}",
+              "api/auth/forgotPassword?email=${payload['user_email']}&newPassword=${payload['newPassword']}&otp=${payload['otp']}",
           payload: payload);
 //       http://192.168.1.29:9094/api/auth/forgotPassword?email=sugaliramanayak777%40gmail.com&newPassword=suga123&otp=917547
       //    Map data = jsonDecode(response);
@@ -650,7 +682,150 @@ class AuthController extends GetxController {
     // succesrespons.update(
     //     " razorpay_order_id", (value) => dummycontroller.order_map["order_id"]);
     // savePaymentRequest(succesrespons.value);
+    // original
     shipmenyetverifyPaymnet(succesrespons.value);
+    print("object");
+  }
+
+// orderid
+  var deleteOderIDLoading = false.obs;
+
+// Delete AstroRazorpay ID
+  Future<void> deleteRazorpayOrderID(String ids) async {
+    deleteOderIDLoading(true);
+
+    try {
+      var response = await apiService.deleteRequestForID(
+          endpoint: "api/auth/deletePaymentBasedRazorPayOrderId/${ids}");
+
+      print(response);
+
+      if (response == "Razorpay Order ID deleted successfully") {
+        Fluttertoast.showToast(
+          msg: response,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: response,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Something went wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      deleteOderIDLoading(false);
+    }
+  }
+
+  // Delete AstroRazorpay id
+//   Future<void> deleterazorpayOrderid(String ids) async {
+//     deleteOderIDLoading(true);
+
+//     try {
+//       var response = await apiService.deleterequestForID(
+//           endpoint: "api/auth/deletePaymentBasedRazorPayOrderId/${ids}");
+// //   https://api.bharatastrosage.com/api/auth/deletePaymentBasedRazorPayOrderId/776
+// // ${BASE_URL}api/payments/webInvoice/${userProfileId}
+
+//       List data = jsonDecode(response);
+//       print(data);
+//       if (data != null) {
+//         print("object");
+//       } else {
+//         Fluttertoast.showToast(
+//           msg: "Somethisng went wrong",
+//           toastLength: Toast.LENGTH_SHORT,
+//           gravity: ToastGravity.BOTTOM,
+//           timeInSecForIosWeb: 1,
+//           backgroundColor: KDarkPink_twg,
+//           textColor: Kwhite,
+//           fontSize: 16.0,
+//         );
+//       }
+//     } catch (e) {
+//       Fluttertoast.showToast(
+//         msg: "Something went wrong",
+//         toastLength: Toast.LENGTH_SHORT,
+//         gravity: ToastGravity.BOTTOM,
+//         timeInSecForIosWeb: 1,
+//         backgroundColor: KDarkPink_twg,
+//         textColor: Kwhite,
+//         fontSize: 16.0,
+//       );
+//     } finally {
+//       deleteOderIDLoading(false);
+//     }
+//   }
+
+  //delete shipment id
+  var deleteShipIDLoading = false.obs;
+  // Delete AstroRazorpay id
+  Future<void> deleteShipmentOrderid(String ids) async {
+    deleteShipIDLoading(true);
+
+    try {
+      var response = await apiService.getRequestNoToken(
+          endpoint: "api/auth/deleteShipmentOrder");
+      // https://api.bharatastrosage.com/api/auth/deleteShipmentOrder
+//   https://api.bharatastrosage.com/api/auth/deletePaymentBasedRazorPayOrderId/776
+// ${BASE_URL}api/payments/webInvoice/${userProfileId}
+
+      List data = jsonDecode(response);
+      print(data);
+      if (data != null) {
+        Fluttertoast.showToast(
+          msg: "Shipment Deleted",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: KDarkPink_twg,
+          textColor: Kwhite,
+          fontSize: 16.0,
+        );
+        print("object");
+      } else {
+        Fluttertoast.showToast(
+          msg: "Somethisng went wrong",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: KDarkPink_twg,
+          textColor: Kwhite,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Something went wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: KDarkPink_twg,
+        textColor: Kwhite,
+        fontSize: 16.0,
+      );
+    } finally {
+      deleteShipIDLoading(false);
+    }
   }
 
   // verify paymnet
@@ -660,7 +835,7 @@ class AuthController extends GetxController {
 
     try {
       var response = await apiService.postReportRequestVerifypayment(
-        endpoint: "payments/verifyPayment",
+        endpoint: "api/payments/verifyPayment1",
         // https://api.bharatastrosage.com/api/payments/verifyPayment
         // response["message"]
         //  "shiprocket/createCardOrder/${userDetails["userProfileId"]}/${impvalue.value}/${selectedPlanType.value}",
@@ -679,7 +854,7 @@ class AuthController extends GetxController {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        // Get.toNamed(kAddUser);
+        Get.toNamed(kAddUser);
       } else {
         Fluttertoast.showToast(
           msg: "Something went wrong",
@@ -708,6 +883,7 @@ class AuthController extends GetxController {
   // Handle payment error
   void _handlePaymentError(PaymentFailureResponse response) {
     errorMessage.value = 'Payment failed: ${response.message}';
+    deleteRazorpayOrderID(dummycontroller.order_map["order_id"]);
     Get.snackbar(
       'Error',
       errorMessage.value,

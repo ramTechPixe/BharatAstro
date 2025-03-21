@@ -68,36 +68,48 @@ class _SupportState extends State<Support> {
                         fontSize: kFourteenFont,
                         fontWeight: kFW500,
                         color: KdarkText)),
-                Container(
-                  margin: EdgeInsets.only(top: 65.h),
+                InkWell(
+                  onTap: () async {
+                    final url = Uri.parse(
+                        "https://wa.me/${6281682528}?text=${Uri.encodeComponent("message")}");
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    } else {
+                      print("Could not launch WhatsApp");
+                    }
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 65.h),
 
-                  //height: 40,
-                  width: double.infinity,
-                  padding: EdgeInsets.all(6),
-                  //  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Kform_border_twg,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "  Whatsapp",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: kSixteenFont,
-                          color: Kwhite,
-                          fontWeight: kFW700,
+                    //height: 40,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(6),
+                    //  alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Kform_border_twg,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "  Whatsapp",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: kSixteenFont,
+                            color: Kwhite,
+                            fontWeight: kFW700,
+                          ),
                         ),
-                      ),
-                      Image.asset(
-                        "assets/images/whatts.png",
-                        height: 45.h,
-                        width: 45.w,
-                        // color: kblack,
-                      ),
-                    ],
+                        Image.asset(
+                          "assets/images/whatts.png",
+                          height: 45.h,
+                          width: 45.w,
+                          // color: kblack,
+                        ),
+                      ],
+                    ),
                   ),
                 )
                 // CustomButton(

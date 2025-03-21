@@ -26,10 +26,32 @@ class UserSimplePreferences {
   static const String isUserId = 'userId';
   static const String userDetails = 'userDetails';
 
+  static const String userEmail = 'userEmail';
+  static const String userPassword = 'userPassword';
+
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
   }
 
+  ///user email and password
+  static Future setUserEmail(String email) async {
+    await _preferences.setString(userEmail, email);
+  }
+
+  static String? getUserEmail() {
+    return _preferences.getString(userEmail);
+  }
+
+  // Set and Get methods for user password
+  static Future setUserPassword(String password) async {
+    await _preferences.setString(userPassword, password);
+  }
+
+  static String? getUserPassword() {
+    return _preferences.getString(userPassword);
+  }
+
+  ///
   static Future setLoginStatus({required bool loginStatus}) async {
     await _preferences.setBool(isUserLoggedIn, loginStatus);
   }

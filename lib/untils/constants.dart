@@ -27,7 +27,8 @@ String kSupport = "/Screens/profile/support.dart";
 String kAppVersion = "/Screens/profile/app_version.dart";
 String kNavigation = "/Screens/navigation_bar.dart";
 String kAddUser = "/Screens/card/add_user_details.dart";
-
+String kSplashTwo = "/Screens/splash_two.dart";
+//export 'package:bharatastro/';
 // export 'package:bharatastro/';
 //export 'package:bharatastro/;
 // export 'package:bharatastro/';
