@@ -332,60 +332,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   )),
-              InkWell(
-                onTap: () {
-                  Get.toNamed(kPurchaseCard);
-                },
-                child: Container(
+              // InkWell(
+              //   onTap: () {
+              //     Get.toNamed(kPurchaseCard);
+              //   },
+              //   child: Container(
 
-                    //  width: 300,
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 10.h),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: kblack.withOpacity(0.1),
-                          blurRadius: 2.r,
-                          offset: Offset(0, 1),
-                          spreadRadius: 2.r,
-                        )
-                      ],
-                      color: Kwhite,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.subscriptions_outlined,
-                              size: 22.sp,
-                            ),
-                            // Image.asset(
-                            //   "assets/images/About App Icon.png",
-                            //   fit: BoxFit.cover,
-                            //   height: 24.h,
-                            // ),
-                            SizedBox(
-                              width: 8.w,
-                            ),
-                            Text("Update Plan",
-                                style: GoogleFonts.poppins(
-                                    fontSize: kFourteenFont,
-                                    fontWeight: kFW400,
-                                    color: kblack)),
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: kblack,
-                          size: 22.sp,
-                        ),
-                      ],
-                    )),
-              ),
+              //       //  width: 300,
+              //       padding: EdgeInsets.all(10),
+              //       margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 10.h),
+              //       decoration: BoxDecoration(
+              //         boxShadow: [
+              //           BoxShadow(
+              //             color: kblack.withOpacity(0.1),
+              //             blurRadius: 2.r,
+              //             offset: Offset(0, 1),
+              //             spreadRadius: 2.r,
+              //           )
+              //         ],
+              //         color: Kwhite,
+              //         borderRadius: BorderRadius.circular(8.r),
+              //       ),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.start,
+              //             children: [
+              //               Icon(
+              //                 Icons.subscriptions_outlined,
+              //                 size: 22.sp,
+              //               ),
+              //               // Image.asset(
+              //               //   "assets/images/About App Icon.png",
+              //               //   fit: BoxFit.cover,
+              //               //   height: 24.h,
+              //               // ),
+              //               SizedBox(
+              //                 width: 8.w,
+              //               ),
+              //               Text("Update Plan",
+              //                   style: GoogleFonts.poppins(
+              //                       fontSize: kFourteenFont,
+              //                       fontWeight: kFW400,
+              //                       color: kblack)),
+              //             ],
+              //           ),
+              //           Icon(
+              //             Icons.arrow_forward_ios,
+              //             color: kblack,
+              //             size: 22.sp,
+              //           ),
+              //         ],
+              //       )),
+              // ),
               Container(
 
                   //  width: 300,

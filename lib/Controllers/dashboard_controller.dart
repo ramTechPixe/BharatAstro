@@ -85,7 +85,8 @@ class DashboardController extends GetxController {
       if (data != null) {
         allPlans.value = data;
 
-        print("object");
+        print(allPlans.value);
+        print("scc");
       } else {
         Fluttertoast.showToast(
           msg: "Somethisng went wrong",

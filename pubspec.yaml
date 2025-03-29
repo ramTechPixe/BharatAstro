@@ -53,6 +53,8 @@ dependencies:
   glassmorphism: ^3.0.0
   flutter_flip_card: ^0.0.6
   text_3d: ^0.0.4
+  expansion_tile_card: ^3.0.0
+  expandable_section: ^0.0.3
 
 dev_dependencies:
   flutter_test:

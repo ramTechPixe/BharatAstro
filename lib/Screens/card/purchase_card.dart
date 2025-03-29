@@ -54,7 +54,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
               height: 20.h,
             ),
             SizedBox(
-              width: 200.w,
+              width: 260.w,
               child: Text("GET YOUR DAILY HOROSCOPES WITH JUST A TAP",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,

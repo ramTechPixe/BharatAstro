@@ -28,12 +28,13 @@ String kAppVersion = "/Screens/profile/app_version.dart";
 String kNavigation = "/Screens/navigation_bar.dart";
 String kAddUser = "/Screens/card/add_user_details.dart";
 String kSplashTwo = "/Screens/splash_two.dart";
-//export 'package:bharatastro/';
-// export 'package:bharatastro/';
-//export 'package:bharatastro/;
-// export 'package:bharatastro/';
-// export 'package:bharatastro/';
-// export 'package:bharatastro/';
+String kHowtoUse = "/Screens/Home/how_to_use.dart";
+String kUtilityForms = "/Screens/Home/utility_forms.dart";
+String kPartnerForms = "/Screens/Home/partner_forms.dart";
+String kAstroOutput = "/Screens/Home/out_put_screen.dart";
+
+//export 'package:bharatastro/Screens/Home/partner_forms.dart';
+
 //export 'package:bharatastro/Screens/card/add_shipping_address.dart';
 // export 'package:bharatastro/Screens/card/pricing.dart';
 // export 'package:bharatastro/Screens/card/purchase_card.dart';

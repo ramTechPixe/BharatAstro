@@ -29,43 +29,43 @@ class _EditProfileState extends State<EditProfile> {
   File? selectedImage;
   final List<String> LanguageList = [
     "english",
-    "assamese",
-    "bengali",
-    "bodo",
-    "dogri",
-    "gujarati",
-    "hindi",
-    "kannada",
-    "kashmiri",
-    "konkani",
-    "maithili",
-    "malayalam",
-    "manipuri",
-    "marathi",
-    "nepali",
-    "odia",
-    "punjabi",
-    "sanskrit",
-    "santali",
-    "sindhi",
-    "tamil",
-    "telugu",
-    "urdu",
-    "tulu",
-    "kodava",
-    "lepcha",
-    "bhili",
-    "garo",
-    "khasi",
-    "mizo",
-    "ho",
-    "ladakhi",
-    "kurukh",
-    "mundari",
-    "gondi",
-    "angika",
-    "bishnupriya manipuri",
-    "sourashtra"
+    // "assamese",
+    // "bengali",
+    // "bodo",
+    // "dogri",
+    // "gujarati",
+    // "hindi",
+    // "kannada",
+    // "kashmiri",
+    // "konkani",
+    // "maithili",
+    // "malayalam",
+    // "manipuri",
+    // "marathi",
+    // "nepali",
+    // "odia",
+    // "punjabi",
+    // "sanskrit",
+    // "santali",
+    // "sindhi",
+    // "tamil",
+    // "telugu",
+    // "urdu",
+    // "tulu",
+    // "kodava",
+    // "lepcha",
+    // "bhili",
+    // "garo",
+    // "khasi",
+    // "mizo",
+    // "ho",
+    // "ladakhi",
+    // "kurukh",
+    // "mundari",
+    // "gondi",
+    // "angika",
+    // "bishnupriya manipuri",
+    // "sourashtra"
   ];
   String base64Image = "";
   bool showimagenullMessage = false;
@@ -124,7 +124,6 @@ class _EditProfileState extends State<EditProfile> {
     // TODO: implement initState
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -964,33 +963,37 @@ class _EditProfileState extends State<EditProfile> {
                     //     return null;
                     //   },
                     // ),
-                    SizedBox(
-                      height: 15.h,
-                    ),
-                    CustomFormFields(
-                      ontap: () {
-                        //  Get.toNamed(kSearchPlaces); // kForgotPassword
-                      },
-                      controller: dashController.editMobileController,
-                      enabled: true,
-                      labelColor: KText,
-                      keyboardType: TextInputType.number,
-                      obscureText: false,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 8),
-                      fontSize: kFourteenFont,
-                      fontWeight: FontWeight.w500,
-                      hintText: "Enter mobile number",
-                      maxLines: 1,
-                      readOnly: false,
-                      label: "Mobile Number",
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter mobile number';
-                        }
-                        return null;
-                      },
-                    ),
+                    dashController.userDetails["mobileNumber"] == null
+                        ? SizedBox()
+                        : SizedBox(
+                            height: 15.h,
+                          ),
+                    dashController.userDetails["mobileNumber"] == null
+                        ? SizedBox()
+                        : CustomFormFields(
+                            ontap: () {
+                              //  Get.toNamed(kSearchPlaces); // kForgotPassword
+                            },
+                            controller: dashController.editMobileController,
+                            enabled: true,
+                            labelColor: KText,
+                            keyboardType: TextInputType.number,
+                            obscureText: false,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            fontSize: kFourteenFont,
+                            fontWeight: FontWeight.w500,
+                            hintText: "Enter mobile number",
+                            maxLines: 1,
+                            readOnly: false,
+                            label: "Mobile Number",
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter mobile number';
+                              }
+                              return null;
+                            },
+                          ),
                     SizedBox(
                       height: 15.h,
                     ),

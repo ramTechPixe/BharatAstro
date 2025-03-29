@@ -85,6 +85,10 @@ class AuthController extends GetxController {
   }
 
   ///////////////////////////////////////////////////////
+  TextEditingController utilityValueController = TextEditingController();
+  TextEditingController matchNameController = TextEditingController();
+  TextEditingController matchPincodeController = TextEditingController();
+
   ///f password-
   TextEditingController fpaswdOTPController = TextEditingController();
   TextEditingController fpaswdNewPasswordController = TextEditingController();
@@ -596,46 +600,19 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
-  // Function to open Razorpay checkout
-  void openCheckout(String subscriptionId, int paymentAmount) {
-    // var options = {
-    // // 'key': 'rzp_live_unxQm7Ut44h0f6',
-    // 'key': 'rzp_test_P7eTEWTbR1y2Sm',
-    // //  razorpay.key.id= rzp_test_P7eTEWTbR1y2Sm
-    // 'subscription_id':
-    //     subscriptionId,
-    // 'name': 'BharatAstro',
-    // 'description': 'Subscription Payment',
-    // 'prefill': {
-    //   'contact': '1234567890',
-    //   'email': 'test@example.com',
-    // },
-    //  };
+  void openCheckout(String orderId, int paymentAmount) {
     var options = {
-      'key': "rzp_test_P7eTEWTbR1y2Sm",
+      'key': "rzp_test_P7eTEWTbR1y2Sm", //  "rzp_test_P7eTEWTbR1y2Sm",
       'amount': paymentAmount * 100,
-      // 'key':
-      //  'amount': paymentAmount * 100,
-      // 100,
-
       'name': 'TWG',
       'description': 'Tool Payment',
+      'order_id': orderId,
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
       'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
       'external': {
         'wallets': ['paytm']
       }
-
-      // 'currency': 'INR',
-      // 'name': 'Techpixe',
-      // 'description': 'Payment for test',
-      // 'image': "https://your-logo-url.com",
-      // 'order_id': subscriptionId,
-      // 'prefill': {
-      //   'contact': '1234567890',
-      //   'email': 'test@example.com',
-      // }
     };
 
     try {

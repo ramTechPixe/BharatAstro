@@ -129,6 +129,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  expandable_section:
+    dependency: "direct main"
+    description:
+      name: expandable_section
+      sha256: "41cbe1e78211478b598d2ebf89da3713b7daf4572cc0ecebffe920d7b56919dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
+  expansion_tile_card:
+    dependency: "direct main"
+    description:
+      name: expansion_tile_card
+      sha256: "27ce4cb518f00e21d0f2309aaa6462b26b148e93cee2029a73088cecf42b1eb0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   fake_async:
     dependency: transitive
     description:

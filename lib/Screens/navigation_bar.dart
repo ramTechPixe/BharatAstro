@@ -84,6 +84,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             onPageChanged: onPageChanged,
             children: [
               Dashboard(),
+              Pricing(),
               OrdersList(),
               ProfileScreen(),
             ],
@@ -144,7 +145,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
   }
 
   List<Widget> _buildThreePageViewChildren() {
-    return <Widget>[Dashboard(), OrdersList(), ProfileScreen()];
+    return <Widget>[Dashboard(), Pricing(), OrdersList(), ProfileScreen()];
   }
 
   List<BottomNavigationBarItem> _buildThreeItems() {
@@ -165,10 +166,25 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
         label: 'Home',
       ),
       BottomNavigationBarItem(
+        icon: Container(
+          margin: EdgeInsets.only(bottom: 5.h),
+          child: Image.asset(
+            _pageIndex == 1
+                ? "assets/images/container_planz.png"
+                : "assets/images/planz.png",
+            height: _pageIndex == 1 ? 20.h : 12.h,
+            width: 30.w,
+            //olor: _pageIndex == 0 ? kAstro_yellow : KText,
+            // width: 19.w,
+          ),
+        ),
+        label: 'Plans',
+      ),
+      BottomNavigationBarItem(
           icon: Container(
             margin: EdgeInsets.only(bottom: 5.h),
             child: Image.asset(
-              _pageIndex == 1
+              _pageIndex == 2
                   ? "assets/images/order_image.png"
                   : "assets/images/unorder_image.png",
               //olor: _pageIndex == 1 ? kAstro_yellow : KText,
@@ -181,7 +197,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
           icon: Container(
             margin: EdgeInsets.only(bottom: 5.h),
             child: Image.asset(
-              _pageIndex == 2
+              _pageIndex == 3
                   ? "assets/images/profile_image.png"
                   : "assets/images/unprofile_image.png",
               height: 20.h,

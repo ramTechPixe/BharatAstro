@@ -18,13 +18,15 @@ import 'package:flutter/services.dart';
 // import 'package:geolocator/geolocator.dart';
 
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:get/get.dart';
 
 class ApiService extends GetxService {
 //  http://192.168.1.197:5000
 
 //   'http://192.168.1.29:9094/api/auth/login?email=raja123%40gmail.com&password=raja123' \
   String baseUrl = "https://api.bharatastrosage.com/"; // main
-  // String baseUrl = "http://192.168.1.46:9094/";
+  // String baseUrl = "http://192.168.1.19:9094/";
 
 // http://192.168.1.28:9094/swagger-ui/index.html
   String dummybaseUrl = "https://thewisguystech.com/";
@@ -1426,6 +1428,90 @@ class ApiService extends GetxService {
     }
   }
 
+  // for villages
+  Future<dynamic> vilagegetRequest({
+    required String endpoint,
+    Map<String, String>? customHeaders,
+  }) async {
+    Uri url = Uri.parse(endpoint);
+    try {
+      var header = {
+        "X-RapidAPI-Host":
+            "india-pincode-with-latitude-and-longitude.p.rapidapi.com",
+        "X-RapidAPI-Key": "92dd61a3abmsh30aff286f1de18bp19ce46jsnd13651517f4e",
+        //  "X-RapidAPI-Key": "YOUR_API_KEY",
+      };
+      // {
+      //   "Authorization": '${UserSimplePreferences.getToken()}',
+      //   //  "accept": 'application/json'
+      // };
+      var response = await http.get(url, headers: header);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
+      }
+    } on DioError catch (e) {
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
+    }
+  }
+
+  // weather api
+  //
+  //         "X-RapidAPI-Key": "92dd61a3abmsh30aff286f1de18bp19ce46jsnd13651517f4e",
+
+  Future<dynamic> weatherRequest({
+    required String endpoint,
+    Map<String, String>? customHeaders,
+  }) async {
+    Uri url = Uri.parse(endpoint);
+    try {
+      var header = {
+        "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
+        "X-RapidAPI-Key": "92dd61a3abmsh30aff286f1de18bp19ce46jsnd13651517f4e",
+        //  "X-RapidAPI-Key": "YOUR_API_KEY",
+      };
+      // {
+      //   "Authorization": '${UserSimplePreferences.getToken()}',
+      //   //  "accept": 'application/json'
+      // };
+      var response = await http.get(url, headers: header);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.body;
+      } else if (response.statusCode == 401 &&
+          jsonDecode(response.body) == "Token is expired") {
+        Get.toNamed(kSignIns);
+        //return jsonDecode(response.body); // Return parsed JSON response
+      }
+    } on DioError catch (e) {
+      debugPrint("$e");
+      if (e.response?.statusCode == 404) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 401) {
+        return e.response?.data;
+      } else if (e.response?.statusCode == 400) {
+        return e.response?.data;
+      } else {
+        return {"message": "Something went wrong!"};
+      }
+    }
+  }
+
+  //
+
   //////////////////////////////////////////////////////////
   Future putRequest({
     required String endpoint,
@@ -1788,8 +1874,11 @@ class ApiService extends GetxService {
     Uri url = Uri.parse(baseUrl + endpoint);
     try {
       Dio dio = Dio();
+      // "Content-Type": "application/json",
+      //     Authorization: `Bearer ${token}`,
       dio.options.headers["content-type"] = 'application/json';
-      dio.options.headers["accept"] = 'application/json';
+      //  'accept': '*/*',
+      dio.options.headers["accept"] = '*/*';
       dio.options.headers["Authorization"] =
           'Bearer ${UserSimplePreferences.getToken()}';
       var response = await dio.post("$url", data: payload);
@@ -1809,6 +1898,128 @@ class ApiService extends GetxService {
       }
     }
   }
+
+  //
+  Future<dynamic> postRequestAstroForm({
+    required String endpoint,
+    required Map payload,
+  }) async {
+    Uri url = Uri.parse(baseUrl + endpoint);
+    try {
+      var request = http.MultipartRequest('POST', url);
+
+      //   "Content-Type":
+      //   Authorization: `Bearer ${token}`,
+      // },
+      request.headers["content-type"] = "application/json";
+      request.headers["accept"] = '*/*';
+      request.headers["Authorization"] =
+          'Bearer ${UserSimplePreferences.getToken()}';
+
+      // Dynamically add fields
+      //  request.fields['category'] = payload['category'] ?? "";
+      request.fields[payload['key']] = payload['value'] ?? "";
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        return {"message": "Error: ${response.statusCode}"};
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return {"message": "Something went wrong!"};
+    }
+  }
+
+  //
+  // Future postRequestAstroForm({
+  //   required String endpoint,
+  //   required Map<dynamic, dynamic> payload,
+  //   Map<String, String>? customHeaders,
+  // }) async {
+  //   Uri url = Uri.parse(baseUrl + endpoint);
+  //   try {
+  //     Dio dioInstance = Dio();
+
+  //     dioInstance.options.headers["content-type"] = 'multipart/form-data';
+  //     dioInstance.options.headers["accept"] = '*/*';
+  //     dioInstance.options.headers["Authorization"] =
+  //         'Bearer ${UserSimplePreferences.getToken()}';
+
+  //     // Create FormData object using dio.FormData
+  //     dio.FormData formData = dio.FormData.fromMap({
+  //       '${payload['key']}': payload['name'].toString(),
+  //       // 'email': payload['email'].toString(),
+  //       ...payload
+  //           .map((key, value) => MapEntry(key.toString(), value.toString())),
+  //     });
+
+  //     var response = await dioInstance.post("$url", data: formData);
+
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       return response.data;
+  //     }
+  //   } on dio.DioException catch (e) {
+  //     debugPrint("$e");
+  //     if (e.response?.statusCode == 404) {
+  //       return e.response?.data;
+  //     } else if (e.response?.statusCode == 401) {
+  //       return e.response?.data;
+  //     } else if (e.response?.statusCode == 400) {
+  //       return e.response?.data;
+  //     } else {
+  //       return {"message": "Something went wrong!"};
+  //     }
+  //   }
+  // }
+
+//   Future postRequestAstroForm({
+//   required String endpoint,
+//   required Map<dynamic, dynamic> payload,
+//   Map<String, String>? customHeaders,
+// }) async {
+//   Uri url = Uri.parse(baseUrl + endpoint);
+//   try {
+//     Dio dio = Dio();
+
+//     dio.options.headers["content-type"] = 'multipart/form-data';
+//     dio.options.headers["accept"] = '*/*';
+//     dio.options.headers["Authorization"] =
+//         'Bearer ${UserSimplePreferences.getToken()}';
+
+//     // Create FormData object
+//     FormData formData = FormData()
+//       ..fields.add(MapEntry('name', payload['name'].toString()))
+//       ..fields.add(MapEntry('email', payload['email'].toString()));
+
+//     // Add remaining dynamic fields (excluding name & email)
+//     payload.forEach((key, value) {
+//       if (key != 'name' && key != 'email') {
+//         formData.fields.add(MapEntry(key.toString(), value.toString()));
+//       }
+//     });
+
+//     var response = await dio.post("$url", data: formData);
+
+//     if (response.statusCode == 200 || response.statusCode == 201) {
+//       return response.data;
+//     }
+//   } on DioError catch (e) {
+//     debugPrint("$e");
+//     if (e.response?.statusCode == 404) {
+//       return e.response?.data;
+//     } else if (e.response?.statusCode == 401) {
+//       return e.response?.data;
+//     } else if (e.response?.statusCode == 400) {
+//       return e.response?.data;
+//     } else {
+//       return {"message": "Something went wrong!"};
+//     }
+//   }
+// }
 
   // Postno Token
 

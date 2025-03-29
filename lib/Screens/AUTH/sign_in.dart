@@ -63,9 +63,10 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     setState(() {
-      authcontroller.UserEmailSignInController.text =
-          "sugaliramanayak7777@gmail.com";
-      authcontroller.UserEmailPasswordController.text = "SRN@ram12345";
+      authcontroller.UserEmailSignInController.text = "somu123@gmail.com";
+      // "sugaliramanayak7777@gmail.com";
+      authcontroller.UserEmailPasswordController.text = "Somu1234@";
+      // "SRN@ram12345";
       // authcontroller.UserEmailSignInController.text = "ram123@gmail.com";
       // authcontroller.UserEmailPasswordController.text = "ram1234";
       // "ramNayak123@";

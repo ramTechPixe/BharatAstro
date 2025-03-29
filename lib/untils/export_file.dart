@@ -39,6 +39,10 @@ export 'package:bharatastro/Screens/AUTH/forgot_password_otp.dart';
 // Home
 export 'package:bharatastro/Screens/Home/dashboard.dart';
 export 'package:bharatastro/Screens/navigation_bar.dart';
+export 'package:bharatastro/Screens/Home/how_to_use.dart';
+export 'package:bharatastro/Screens/Home/utility_forms.dart';
+export 'package:bharatastro/Screens/Home/partner_forms.dart';
+export 'package:bharatastro/Screens/Home/out_put_screen.dart';
 
 // Card
 export 'package:bharatastro/Screens/card/purchase_card.dart';
@@ -61,3 +65,9 @@ export 'package:bharatastro/Controllers/api_services.dart';
 export 'package:bharatastro/Controllers/auth_controllers.dart';
 export 'package:bharatastro/Controllers/dashboard_controller.dart';
 export 'package:bharatastro/Controllers/dummy_controller.dart';
+export 'package:bharatastro/Controllers/prediction_controller.dart';
+export 'package:bharatastro/Controllers/dashas_controller.dart';
+export 'package:bharatastro/Controllers/dosh_controller.dart';
+export 'package:bharatastro/Controllers/horoscope_controller.dart';
+export 'package:bharatastro/Controllers/utility_controller.dart';
+export 'package:bharatastro/Controllers/matching_controller.dart';
